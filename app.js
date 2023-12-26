@@ -11,6 +11,7 @@ const passport = require("passport");
 const session = require("express-session");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
+const csrf = require("tiny-csrf");
 const saltRounds = 10;
 
 //importing models
@@ -36,7 +37,7 @@ app.use(bodyParser.json());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser("ssh some key!"));
 app.use(express.static(path.join(__dirname, "public")));
 
 //session midllware setup
@@ -54,11 +55,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 console.log("Passport initialization completed successfully");
-
-app.use((err, req, res, next) => {
-  console.error("Unhandled error:", err);
-  res.status(500).send("Internal Server Error");
-});
 
 //defing the authUser function for local  strategy
 const authUser = async (mail, password, done) => {
@@ -126,9 +122,15 @@ const logincheck = (request, response) => {
   }
 };
 
+//csrf token setup
+app.use(csrf("123456789iamasecret987654321look", ["POST", "PUT", "DELETE"]));
+
 //defining the routes
 app.get("/login", isLogedIn, (request, response) => {
-  response.render("login", { error: request.flash("error") });
+  response.render("login", {
+    error: request.flash("error"),
+    csrfToken: request.csrfToken(),
+  });
 });
 
 app.post(
@@ -139,13 +141,18 @@ app.post(
   }),
   (req, res) => {
     console.log("test user", req.user);
-    res.send("hiii");
+    res.render("educatorhome");
   },
 );
 
 app.use("/signup", signup);
 
 app.use("/", logincheck);
+
+app.use((err, req, res, next) => {
+  console.error("Unhandled error:", err);
+  res.status(500).send("Internal Server Error" + err);
+});
 
 //exporting the app
 module.exports = app;

@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 const getsignup = (request, response) => {
-  response.render("signup");
+  response.render("signup", { csrfToken: request.csrfToken() });
 };
 
 const postsignup = async (request, response) => {
