@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "test": "jest --detectOpenHandles",
+    "db:create:test": "cross-env NODE_ENV=test npx sequelize-cli db:create",
+    "pretest": "cross-env NODE_ENV=test sequelize-cli db:drop && cross-env NODE_ENV=test sequelize-cli db:create && cross-env NODE_ENV=test sequelize-cli db:migrate",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
     "prepare": "cd .. && husky install todo-app/.husky"
   },
   "dependencies": {
@@ -33,6 +35,7 @@
   "author": "Bhuvaneswar",
   "license": "ISC",
   "devDependencies": {
+    "cheerio": "^1.0.0-rc.12",
     "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
     "husky": "^8.0.3",

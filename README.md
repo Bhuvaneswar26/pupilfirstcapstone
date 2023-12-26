@@ -11,4 +11,4 @@ PostgresSql
 #project setup
 clone the repo
 install dependencies - npm install
-start application -  npm start
+start application - npm start
