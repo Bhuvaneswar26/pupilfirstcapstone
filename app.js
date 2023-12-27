@@ -17,9 +17,17 @@ const saltRounds = 10;
 //importing models
 const { User } = require("./models");
 const Sequelize = require("sequelize");
+const {
+  iseducator,
+  isstudent,
+  isLogedIn,
+  logincheck,
+} = require("./middleware.js");
 
 //Routes importing
 const signup = require("./routes/signup");
+const educator = require("./routes/educator");
+const student = require("./routes/student");
 
 //creating the app server
 const app = express();
@@ -28,17 +36,19 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
+//setting up the static files
+app.use(express.static(path.join(__dirname, "public")));
+
 //using flash
 app.use(flash());
 
 //midllware setup
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(logger("dev"));
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(logger("dev"));
 app.use(cookieParser("ssh some key!"));
-app.use(express.static(path.join(__dirname, "public")));
 
 //session midllware setup
 app.use(
@@ -94,9 +104,8 @@ passport.serializeUser((user, done) => {
 });
 
 //deserializing the user
-passport.deserializeUser((id, done) => {
-  console.log("hiii");
-  User.findByPk(id)
+passport.deserializeUser(async (id, done) => {
+  await User.findByPk(id)
     .then((user) => {
       console.log(user);
       done(null, user);
@@ -106,24 +115,13 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-//defining the middleware function for checking the user is loged in or not
-const isLogedIn = (request, response, next) => {
-  if (request.isAuthenticated) {
-    next();
-  } else {
-    response.redirect("/login");
-  }
-};
-const logincheck = (request, response) => {
-  if (request.isAuthenticated) {
-    response.redirect("/home");
-  } else {
-    response.redirect("/login");
-  }
-};
-
 //csrf token setup
-app.use(csrf("123456789iamasecret987654321look", ["POST", "PUT", "DELETE"]));
+const csrfProtection = csrf("123456789iamasecret987654321look", [
+  "POST",
+  "PUT",
+  "DELETE",
+]);
+app.use(csrfProtection);
 
 //defining the routes
 app.get("/login", isLogedIn, (request, response) => {
@@ -139,15 +137,24 @@ app.post(
     failureRedirect: "/login",
     failureFlash: true,
   }),
-  (req, res) => {
-    console.log("test user", req.user);
-    res.render("educatorhome");
+  (request, response) => {
+    if (request.user.role === "educator") {
+      response.redirect("/educator");
+    } else {
+      response.redirect("/student");
+    }
   },
 );
 
-app.use("/signup", signup);
+app.use("/signup", csrfProtection, isLogedIn, signup);
+app.use("/educator", csrfProtection, logincheck, iseducator, educator);
+app.use("/student", logincheck, isstudent, student);
 
-app.use("/", logincheck);
+app.get("/", (request, response) => {
+  response.redirect("/login");
+});
+
+// app.use("/", logincheck);
 
 app.use((err, req, res, next) => {
   console.error("Unhandled error:", err);
