@@ -12,6 +12,7 @@ const session = require("express-session");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 const csrf = require("tiny-csrf");
+const methodOverride = require("method-override");
 const saltRounds = 10;
 
 //importing models
@@ -43,12 +44,22 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(flash());
 
 //midllware setup
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(logger("dev"));
 app.use(cookieParser("ssh some key!"));
+app.use(
+  methodOverride(function (req, res) {
+    if (req.body && typeof req.body === "object" && "_method" in req.body) {
+      // look in urlencoded POST bodies and delete it
+      var method = req.body._method;
+      delete req.body._method;
+      return method;
+    }
+  }),
+);
 
 //session midllware setup
 app.use(
@@ -120,6 +131,7 @@ const csrfProtection = csrf("123456789iamasecret987654321look", [
   "POST",
   "PUT",
   "DELETE",
+  "PATCH",
 ]);
 app.use(csrfProtection);
 
@@ -127,6 +139,7 @@ app.use(csrfProtection);
 app.get("/login", isLogedIn, (request, response) => {
   response.render("login", {
     error: request.flash("error"),
+    success: request.flash("success"),
     csrfToken: request.csrfToken(),
   });
 });
