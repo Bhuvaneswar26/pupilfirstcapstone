@@ -226,10 +226,5 @@ app.get("/", logincheck, (request, response) => {
   response.redirect("/login");
 });
 
-app.use((err, req, res, next) => {
-  console.error("Unhandled error:", err);
-  res.status(500).send("Internal Server Error" + err);
-});
-
 // Exporting the app
 module.exports = app;
