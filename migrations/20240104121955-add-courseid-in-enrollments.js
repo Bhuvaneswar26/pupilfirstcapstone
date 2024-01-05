@@ -4,21 +4,22 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    queryInterface.addColumn("Pages", "chapterId", {
+    queryInterface.addColumn("enrollments", "courseId", {
       type: Sequelize.INTEGER,
+      allowNull: false,
       references: {
-        model: "Chapters",
+        model: "Courses",
         key: "id",
       },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
     });
 
-    queryInterface.addConstraint("Pages", {
-      fields: ["chapterId"],
+    // Adding foreign key constraint
+    queryInterface.addConstraint("enrollments", {
+      fields: ["courseId"],
       type: "foreign key",
+      name: "enrollments_courseId_fk",
       references: {
-        table: "Chapters",
+        table: "Courses",
         field: "id",
       },
       onDelete: "cascade",
@@ -27,6 +28,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn("Pages", "chapterId");
+    queryInterface.removeConstraint("enrollments", "enrollments_courseId_fk");
   },
 };

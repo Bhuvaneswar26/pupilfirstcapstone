@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/ba6d17dfa2.js" crossorigin="anonymous"></script>
+  <title>Course Preview</title>
+</head>
+<body class="bg-gray-100">
+  <!-- Navbar -->
+  <nav class="bg-blue-500 p-4 text-white flex items-center justify-between">
+    <div class="flex items-center">
+      <a href="/student"><span class="text-4xl font-semibold">LMS</span></a>
+    </div>
+
+    <div class="flex items-center space-x-8">
+      <!-- Dashboard Link -->
+      <a href="/student" class="hover:underline text-lg">Dashboard<i class="fa-solid fa-table-columns" style="margin-left: 4px;"></i></a>
+
+      <a href="/profile" class="hover:underline text-lg">Profile<i class="fa-regular fa-user" style="margin-left: 4px;"></i></a>
+
+      <a href="/signout" class="hover:underline text-lg">SignOut<i class="fa-solid fa-arrow-right-from-bracket" style="margin-left: 4px;"></i></a>
+
+    </div>
+  </nav>
+
+    <!-- Course Preview Content -->
+    <div class="mx-auto p-6 max-w-2xl">
+        <!-- Course Information -->
+        <div class="bg-white p-6 rounded-md shadow-md mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Course: <%= course.courseName %></h2>
+            <p class="text-gray-600 mb-4">Description: <%= course.description %></p>
+            <p class="text-gray-600 mb-4">Mentor: John Doe</p>
+            <p class="text-gray-600 mb-4">Students Enrolled: 500</p>
+
+            <a href="/student/enroll/<%= course.id %>" class="bg-green-500 text-white px-4 py-2 rounded-md w-full">
+                <i class="fas fa-arrow-right mr-2"></i> Enroll Now
+            </a>
+        </div>
+
+        <!-- Locked Chapters -->
+        <div class="bg-white p-6 rounded-md shadow-md">
+            <h2 class="text-2xl font-semibold mb-4">Chapters</h2>
+
+            <% coursechapters.forEach(function(chapter){ %>
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <i class="fas fa-lock text-gray-500 mr-2"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold">Chapter 1:<%= chapter.chapterName %></h3>
+                        <p class="text-gray-600">Description:<%= chapter.description %> .</p>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+</body>
+
+</html>

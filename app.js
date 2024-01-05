@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
+
 //BuiltIn Pacakges importing
 const express = require("express");
 const path = require("path");
@@ -18,6 +19,8 @@ const saltRounds = 10;
 //importing models
 const { User } = require("./models");
 const Sequelize = require("sequelize");
+
+//LOGIN SECURITY MIDDLEWARE
 const {
   iseducator,
   isstudent,
@@ -33,7 +36,7 @@ const student = require("./routes/student");
 //creating the app server
 const app = express();
 
-// view engine setup
+// ejs view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
@@ -162,12 +165,60 @@ app.post(
 app.use("/signup", csrfProtection, isLogedIn, signup);
 app.use("/educator", csrfProtection, logincheck, iseducator, educator);
 app.use("/student", logincheck, isstudent, student);
-
-app.get("/", (request, response) => {
-  response.redirect("/login");
+app.get("/signout", function (req, res) {
+  req.logout(function (err) {
+    if (err) {
+      // Handle the error
+      return next(err);
+    }
+    res.redirect("/login"); // Redirect after logout
+  });
 });
 
-// app.use("/", logincheck);
+app.get("/profile", logincheck, (request, response) => {
+  response.render("profile", {
+    user: request.user,
+    csrfToken: request.csrfToken(),
+    success: request.flash("success"),
+    error: request.flash("error"),
+  });
+});
+
+app.put("/profile/changepassword", logincheck, async (request, response) => {
+  try {
+    const user = await User.findOne({ where: { id: request.user.id } });
+    bcrypt.compare(
+      request.body.oldpassword,
+      user.password,
+      async function (err, result) {
+        if (result) {
+          const hash = await bcrypt.hash(request.body.newpassword, saltRounds);
+          await User.update(
+            { password: hash },
+            {
+              where: {
+                id: request.user.id,
+              },
+            },
+          );
+          request.flash("success", "Password changed successfully");
+          response.redirect("/profile");
+        } else {
+          request.flash("error", "Invalid Password");
+          response.redirect("/profile");
+        }
+      },
+    );
+  } catch (error) {
+    console.error("Error in changepassword", error);
+    request.flash("error", "Error in changepassword");
+    response.redirect("/profile");
+  }
+});
+
+app.get("/", logincheck, (request, response) => {
+  response.redirect("/login");
+});
 
 app.use((err, req, res, next) => {
   console.error("Unhandled error:", err);

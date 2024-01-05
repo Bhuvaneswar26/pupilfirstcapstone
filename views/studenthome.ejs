@@ -3,337 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://kit.fontawesome.com/ba6d17dfa2.js" crossorigin="anonymous"></script>
-  <title>Navbar Example</title>
+  <title>Student Dashboard</title>
 </head>
 <body class="bg-gray-100">
   <!-- Navbar -->
   <nav class="bg-blue-500 p-4 text-white flex items-center justify-between">
-    <!-- Left side: Logo -->
     <div class="flex items-center">
-      <span class="text-4xl font-semibold">LMS</span>
+      <a href="/student"><span class="text-4xl font-semibold">LMS</span></a>
     </div>
 
-    <!-- Right side: Profile Button -->
-    <div class="flex items-center space-x-4">
+    <div class="flex items-center space-x-8">
       <!-- Dashboard Link -->
-      <a href="#" class="hover:underline text-lg">Dashboard</a>
+      <a href="/student" class="hover:underline text-lg">Dashboard<i class="fa-solid fa-table-columns" style="margin-left: 4px;"></i></a>
 
-      <!-- Profile Dropdown -->
-      <div class="relative inline-block text-left">
-        <button type="button" id="profileButton" class="inline-flex items-center justify-center w-10 h-10 bg-blue-700 rounded-full focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200">
-          <i class="fas fa-user text-white" id="profileButton"></i>
-        </button>
+      <a href="/profile" class="hover:underline text-lg">Profile<i class="fa-regular fa-user" style="margin-left: 4px;"></i></a>
 
-        <!-- Dropdown Menu -->
-        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
-          <div class="py-1">
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white">Profile</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white">Edit Profile</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white">Sign Out</a>
-          </div>
-        </div>
-      </div>
+      <a href="/signout" class="hover:underline text-lg">SignOut<i class="fa-solid fa-arrow-right-from-bracket" style="margin-left: 4px;"></i></a>
+
     </div>
   </nav>
-
-  <!-- Your Page Content Goes Here -->
-
-  <!-- Main Section -->
- <!-- Main Section -->
-  <!-- Main Section -->
   <div class="flex flex-col sm:flex-row h-70vh mx-auto bg-white">
     <!-- Left Section -->
     <div class="flex-shrink-0 p-4 text-blue-500 w-full sm:w-1/2" style="margin: auto;">
       <div class="flex items-center mb-8 flex-col gap-4">
-        <h2 class="text-6xl font-semibold text-center">Welcome To LMS</h2>
-        <p class="text-4xl font-semibold text-yellow-500 text-center">John Doe</p>
+        <h2 class="text-6xl font-semibold text-center">Welcome To LMS <br> Student</h2>
+        <p class="text-4xl font-semibold text-yellow-500 text-center"><%=  name %></p>
       </div>
       <div class="flex flex-grow justify-center gap-4" style="margin: auto;">
-        <button class="bg-green-500 text-white px-4 py-2 rounded-md flex items-center">
+        <a href="#enrolledcourses" class="bg-green-500 text-white px-4 py-2 rounded-md flex items-center">
           <i class="fas fa-graduation-cap text-white mr-2"></i>
           Enrolled Courses
-        </button>
-        <button class="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center">
+        </a>
+        <a href="#availablecourses" class="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center">
           <i class="fas fa-book-open text-white mr-2"></i>
           Available Courses
-        </button>
-        <button class="bg-red-500 text-white px-8 py-2 rounded-md flex items-center">
-          <i class="fas fa-chart-bar text-white mr-2"></i>
-          Reports
-        </button>
+        </a>
       </div>
     </div>
   
-    <!-- Right Section (Image) -->
     <div class="flex-grow">
       <img src="/images/home-main.jpg" alt="Educator Image" class="object-cover h-full w-full">
     </div>
   </div>
   
-
-
-
   <div class="flex-grow overflow-hidden mx-10">
     <!-- Enrolled Courses Section -->
-    <div class="mb-8">
-      <h2 class="text-2xl font-semibold mb-4 bg-green-500 text-white py-2 px-4 text-center">Enrolled Courses</h2>
-      <div class="flex flex-wrap mx-6">
-        <!-- Sample Course Card -->
-        <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
-            <div class="bg-white rounded-md shadow-md p-4">
-              <h3 class="text-lg font-semibold mb-2">Course Name</h3>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: Jane Smith
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Enrollments: 100
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </p>
-              <button class="bg-blue-500 text-white px-4 py-2 rounded-md w-full">
-                <i class="fas fa-arrow-right mr-2"></i> View Course
-              </button>
+    <div class="mb-8 your-courses">
+        <h2 class="text-2xl font-semibold mb-4 bg-green-500 text-white py-2 px-4 text-center enrolledcourses" id="enrolledcourses" >Enrolled Courses</h2>
+        <div class="flex flex-wrap mx-6">
+            <% enrolledcourses.forEach((course) => { %>
+            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
+                <div class="bg-white rounded-md shadow-md p-4">
+                  <h3 class="text-lg font-semibold mb-2">Course:<%= course.courseName %></h3>
+                    <p class="text-gray-500 mb-2">
+                        <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: <%= name  %>
+                    </p>
+                    <p class="text-gray-500 mb-2">
+                        <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: <%= course.description %>
+                    </p>
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-md w-full">
+                        <i class="fas fa-arrow-right mr-2"></i> Continue  Learning
+                    </button>
+                </div>
             </div>
-          </div>
-          
-
-          <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
-            <div class="bg-white rounded-md shadow-md p-4">
-              <h3 class="text-lg font-semibold mb-2">Course Name</h3>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: Jane Smith
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Enrollments: 100
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </p>
-              <button class="bg-blue-500 text-white px-4 py-2 rounded-md w-full">
-                <i class="fas fa-arrow-right mr-2"></i> View Course
-              </button>
-            </div>
-          </div>
-
-          <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
-            <div class="bg-white rounded-md shadow-md p-4">
-              <h3 class="text-lg font-semibold mb-2">Course Name</h3>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: Jane Smith
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Enrollments: 100
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </p>
-              <button class="bg-blue-500 text-white px-4 py-2 rounded-md w-full">
-                <i class="fas fa-arrow-right mr-2"></i> View Course
-              </button>
-            </div>
-          </div>
-          
-
-          <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
-            <div class="bg-white rounded-md shadow-md p-4">
-              <h3 class="text-lg font-semibold mb-2">Course Name</h3>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: Jane Smith
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Enrollments: 100
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </p>
-              <button class="bg-blue-500 text-white px-4 py-2 rounded-md w-full">
-                <i class="fas fa-arrow-right mr-2"></i> View Course
-              </button>
-            </div>
-          </div>
-          
-
-          <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
-            <div class="bg-white rounded-md shadow-md p-4">
-              <h3 class="text-lg font-semibold mb-2">Course Name</h3>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: Jane Smith
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Enrollments: 100
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </p>
-              <button class="bg-blue-500 text-white px-4 py-2 rounded-md w-full">
-                <i class="fas fa-arrow-right mr-2"></i> View Course
-              </button>
-            </div>
-          </div>
-          <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
-            <div class="bg-white rounded-md shadow-md p-4">
-              <h3 class="text-lg font-semibold mb-2">Course Name</h3>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: Jane Smith
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Enrollments: 100
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </p>
-              <button class="bg-blue-500 text-white px-4 py-2 rounded-md w-full">
-                <i class="fas fa-arrow-right mr-2"></i> View Course
-              </button>
-            </div>
-          </div>
-          
-        <!-- Repeat the above card structure for each enrolled course -->
-      </div>
+            <% }) %>
+        </div>
     </div>
-
+  
     <!-- Available Courses Section -->
     <div>
-      <h2 class="text-2xl font-semibold mb-4 bg-gray-500 text-white py-2 px-4 text-center">Available Courses</h2>
-      <div class="flex flex-wrap mx-6">
-        <!-- Sample Course Card -->
-        <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
-            <div class="bg-white rounded-md shadow-md p-4">
-              <h3 class="text-lg font-semibold mb-2">Course Name</h3>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: Jane Smith
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Enrollments: 100
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </p>
-              <button class="bg-green-500 text-white px-4 py-2 rounded-md w-full">
-                <i class="fas fa-arrow-right mr-2"></i> Enroll Now
-              </button>
-            </div>
-          </div>
-          
+        <h2 class="text-2xl font-semibold mb-4 bg-gray-500 text-white py-2 px-4 text-center availablecourses" id="availablecourses">Available Courses</h2>
+        <div class="flex flex-wrap mx-6">
+            <% notenrolledcourses.forEach((course) => { %>
+            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
+                <div class="bg-white rounded-md shadow-md p-4">
+                    <h3 class="text-lg font-semibold mb-2"><%= course.courseName %></h3>
+                    <p class="text-gray-500 mb-2">
+                        <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: <%= course.facultyName %>
+                    </p>
+                    <p class="text-gray-500 mb-2">
+                        <i class="fas fa-info-circle text-blue-500 mr-2"></i> Enrollments: <%= course.enrolledcount %>
+                    </p>
+                    <p class="text-gray-500 mb-2">
+                        <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: <%= course.description %>
+                    </p>
+                    <a href="/student/enroll/<%= course.id %>" class="bg-green-500 text-white px-4 py-2 rounded-md w-full">
+                      <i class="fa-regular fa-hand-point-up"></i> Enroll Now
+                    </a>
 
-          <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
-            <div class="bg-white rounded-md shadow-md p-4">
-              <h3 class="text-lg font-semibold mb-2">Course Name</h3>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: Jane Smith
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Enrollments: 100
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </p>
-              <button class="bg-green-500 text-white px-4 py-2 rounded-md w-full">
-                <i class="fas fa-arrow-right mr-2"></i> Enroll Now
-              </button>
+                    <a href="/student/coursepreview/<%= course.id %>" class="bg-red-500 text-white px-4 py-2 mx-2 rounded-md w-full">
+                      <i class="fa-regular fa-eye"></i> Preview
+                   </a>
+                </div>
             </div>
-          </div>
-
-          <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
-            <div class="bg-white rounded-md shadow-md p-4">
-              <h3 class="text-lg font-semibold mb-2">Course Name</h3>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: Jane Smith
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Enrollments: 100
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </p>
-              <button class="bg-green-500 text-white px-4 py-2 rounded-md w-full">
-                <i class="fas fa-arrow-right mr-2"></i> Enroll Now
-              </button>
-            </div>
-          </div>
-          
-
-          <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
-            <div class="bg-white rounded-md shadow-md p-4">
-              <h3 class="text-lg font-semibold mb-2">Course Name</h3>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: Jane Smith
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Enrollments: 100
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </p>
-              <button class="bg-green-500 text-white px-4 py-2 rounded-md w-full">
-                <i class="fas fa-green-right mr-2"></i> Enroll Now
-              </button>
-            </div>
-          </div>
-          
-
-          <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
-            <div class="bg-white rounded-md shadow-md p-4">
-              <h3 class="text-lg font-semibold mb-2">Course Name</h3>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: Jane Smith
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Enrollments: 100
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </p>
-              <button class="bg-green-500 text-white px-4 py-2 rounded-md w-full">
-                <i class="fas fa-arrow-right mr-2"></i> Enroll Now
-              </button>
-            </div>
-          </div>
-          <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4">
-            <div class="bg-white rounded-md shadow-md p-4">
-              <h3 class="text-lg font-semibold mb-2">Course Name</h3>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-user-graduate text-blue-500 mr-2"></i> Instructor: Jane Smith
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Enrollments: 100
-              </p>
-              <p class="text-gray-500 mb-2">
-                <i class="fas fa-info-circle text-blue-500 mr-2"></i> Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </p>
-              <button class="bg-green-500 text-white px-4 py-2 rounded-md w-full">
-                <i class="fas fa-arrow-right mr-2"></i> Enroll Now
-              </button>
-            </div>
-          </div>
-          
-        <!-- Repeat the above card structure for each available course -->
-      </div>
+            <% }) %>
+        </div>
     </div>
   </div>
 
-  <script>
-    // JavaScript for dropdown functionality
-    document.addEventListener("DOMContentLoaded", function() {
-      var profileButton = document.getElementById("profileButton");
-      var profileDropdown = document.getElementById("profileDropdown");
+  <%- include('partials/footer') %>
 
-      profileButton.addEventListener("click", function() {
-        profileDropdown.classList.toggle("hidden");
-      });
-
-      // Close the dropdown if the user clicks outside of it
-      window.addEventListener("click", function(event) {
-        if (!event.target.matches("#profileButton")) {
-          if (!profileDropdown.classList.contains("hidden")) {
-            profileDropdown.classList.add("hidden");
-          }
-        }
-      });
-    });
-  </script>
 </body>
 </html>

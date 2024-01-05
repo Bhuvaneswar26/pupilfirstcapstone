@@ -1,3 +1,4 @@
+//midilware function to check is user the educator or not
 const iseducator = (req, res, next) => {
   if (req.user && req.user.role === "educator") {
     return next();
@@ -8,6 +9,7 @@ const iseducator = (req, res, next) => {
   }
 };
 
+//midilware function to check is user the student or not
 const isstudent = (req, res, next) => {
   if (req.user && req.user.role === "student") {
     return next();
@@ -18,6 +20,7 @@ const isstudent = (req, res, next) => {
   }
 };
 
+//midilware function to check is user the loged in or not
 const isLogedIn = (request, response, next) => {
   if (request.isAuthenticated()) {
     if (request.user.role === "educator") {
@@ -30,6 +33,7 @@ const isLogedIn = (request, response, next) => {
   }
 };
 
+//midilware function to check is he the educator or not for /login route
 const logincheck = (request, response, next) => {
   if (request.isAuthenticated()) {
     next();
@@ -38,4 +42,5 @@ const logincheck = (request, response, next) => {
   }
 };
 
+//exporting the above middleware functions
 module.exports = { iseducator, isstudent, isLogedIn, logincheck };

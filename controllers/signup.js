@@ -10,9 +10,6 @@ const getsignup = (request, response) => {
 };
 
 const postsignup = async (request, response) => {
-  console.log("test controller");
-  console.log(request.body);
-
   if (!request.body.email) {
     request.flash("error", "Email is required");
     return response.redirect("/signup");
@@ -61,7 +58,6 @@ const postsignup = async (request, response) => {
               request.flash("error", "User Already Exists");
               return response.redirect("/signup");
             } else {
-              console.error(err);
               request.flash("error", "An unexpected error occurred");
               return response.redirect("/signup");
             }
@@ -81,7 +77,6 @@ const postsignup = async (request, response) => {
       request.flash("error", "User Already Exists");
       return response.render("signup", { error: request.flash("error") });
     } else {
-      console.error(err);
       request.flash("error", "An unexpected error occurred");
       return response.render("signup", { error: request.flash("error") });
     }
