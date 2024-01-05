@@ -12,12 +12,12 @@
   <!-- Navbar -->
   <nav class="bg-blue-500 p-4 text-white flex items-center justify-between">
     <div class="flex items-center">
-      <a href="/student"><span class="text-4xl font-semibold">LMS</span></a>
+      <a href="/login"><span class="text-4xl font-semibold">LMS</span></a>
     </div>
 
     <div class="flex items-center space-x-8">
       <!-- Dashboard Link -->
-      <a href="/student" class="hover:underline text-lg">Dashboard<i class="fa-solid fa-table-columns" style="margin-left: 4px;"></i></a>
+      <a href="/login" class="hover:underline text-lg">Dashboard<i class="fa-solid fa-table-columns" style="margin-left: 4px;"></i></a>
 
       <a href="/profile" class="hover:underline text-lg">Profile<i class="fa-regular fa-user" style="margin-left: 4px;"></i></a>
 
@@ -32,6 +32,14 @@
 
     <!-- Display Courses -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <% if(courses.length == 0){ %>
+        <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-4" style="margin: auto;">
+          <div class="bg-red-500 rounded-md shadow-md p-4">
+            <h3 class="text-lg font-semibold mb-2">No Courses Created</h3>
+            <a href="/educator/createcourse" class="bg-green-500 text-white px-4 py-2 rounded-md inline-block">Create Course</a>
+          </div>
+        </div>
+      <% } %>
       <% courses.forEach((course) => { %>
         <div class="bg-white p-6 rounded-lg shadow-md">
           <h3 class="text-xl mb-4"><%= course.courseName %></h3>

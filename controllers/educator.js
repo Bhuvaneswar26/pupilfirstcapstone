@@ -116,6 +116,10 @@ const postaddchapter = async (request, response) => {
     request.flash("error", "please enter chaptername");
     return response.redirect("/educator/addchapter/" + request.params.courseid);
   }
+  if (request.body.chapternumber && isNaN(request.body.chapternumber)) {
+    request.flash("error", "chapternumber should be a nummber");
+    return response.redirect("/educator/addchapter/" + request.params.courseid);
+  }
   if (!request.body.chapternumber) {
     request.flash("error", "please enter chapternumber");
     return response.redirect("/educator/addchapter/" + request.params.courseid);

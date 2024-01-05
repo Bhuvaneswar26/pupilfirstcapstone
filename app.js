@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 
-//BuiltIn Pacakges importing
+// Built-in Packages importing
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -10,17 +10,18 @@ const logger = require("morgan");
 var flash = require("connect-flash");
 const passport = require("passport");
 const session = require("express-session");
+const pgSession = require("connect-pg-simple")(session);
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 const csrf = require("tiny-csrf");
 const methodOverride = require("method-override");
 const saltRounds = 10;
 
-//importing models
+// Importing models
 const { User } = require("./models");
 const Sequelize = require("sequelize");
 
-//LOGIN SECURITY MIDDLEWARE
+// Login security middleware
 const {
   iseducator,
   isstudent,
@@ -28,25 +29,25 @@ const {
   logincheck,
 } = require("./middleware.js");
 
-//Routes importing
+// Routes importing
 const signup = require("./routes/signup");
 const educator = require("./routes/educator");
 const student = require("./routes/student");
 
-//creating the app server
+// Creating the app server
 const app = express();
 
-// ejs view engine setup
+// EJS view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-//setting up the static files
+// Setting up the static files
 app.use(express.static(path.join(__dirname, "public")));
 
-//using flash
+// Using flash
 app.use(flash());
 
-//midllware setup
+// Middleware setup
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
@@ -56,7 +57,6 @@ app.use(cookieParser("ssh some key!"));
 app.use(
   methodOverride(function (req, res) {
     if (req.body && typeof req.body === "object" && "_method" in req.body) {
-      // look in urlencoded POST bodies and delete it
       var method = req.body._method;
       delete req.body._method;
       return method;
@@ -64,15 +64,24 @@ app.use(
   }),
 );
 
-//session midllware setup
+// Session middleware setup using connect-pg-simple
+const sessionStore = new pgSession({
+  conObject: {
+    connectionString:
+      "postgres://postgres:0826%40ABHUVI@localhost:5432/lms_dev_db",
+  },
+  tableName: "sessions",
+});
+
 app.use(
   session({
     secret: "this is the secret key for lms",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 24 * 60 * 60 * 100,
+      maxAge: 24 * 60 * 60 * 1000,
     },
+    store: sessionStore,
   }),
 );
 
@@ -80,12 +89,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 console.log("Passport initialization completed successfully");
 
-//defing the authUser function for local  strategy
+// Defining the authUser function for the local strategy
 const authUser = async (mail, password, done) => {
   try {
     const user = await User.findOne({ where: { email: mail } });
     if (!user) {
-      console.log("first if", user);
       return done(null, false, { message: "User Not Found" });
     }
     bcrypt.compare(password, user.password, function (err, result) {
@@ -101,7 +109,7 @@ const authUser = async (mail, password, done) => {
   }
 };
 
-//defining which strategey of passportjs to use
+// Defining which strategy of passportjs to use
 passport.use(
   new LocalStrategy(
     {
@@ -112,16 +120,15 @@ passport.use(
   ),
 );
 
-//serialing the user
+// Serializing the user
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-//deserializing the user
+// Deserializing the user
 passport.deserializeUser(async (id, done) => {
   await User.findByPk(id)
     .then((user) => {
-      console.log(user);
       done(null, user);
     })
     .catch((error) => {
@@ -129,7 +136,7 @@ passport.deserializeUser(async (id, done) => {
     });
 });
 
-//csrf token setup
+// CSRF token setup
 const csrfProtection = csrf("123456789iamasecret987654321look", [
   "POST",
   "PUT",
@@ -138,7 +145,7 @@ const csrfProtection = csrf("123456789iamasecret987654321look", [
 ]);
 app.use(csrfProtection);
 
-//defining the routes
+// Defining the routes
 app.get("/login", isLogedIn, (request, response) => {
   response.render("login", {
     error: request.flash("error"),
@@ -164,14 +171,13 @@ app.post(
 
 app.use("/signup", csrfProtection, isLogedIn, signup);
 app.use("/educator", csrfProtection, logincheck, iseducator, educator);
-app.use("/student", logincheck, isstudent, student);
+app.use("/student", logincheck, isstudent || iseducator, student);
 app.get("/signout", function (req, res) {
   req.logout(function (err) {
     if (err) {
-      // Handle the error
       return next(err);
     }
-    res.redirect("/login"); // Redirect after logout
+    res.redirect("/login");
   });
 });
 
@@ -225,5 +231,5 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal Server Error" + err);
 });
 
-//exporting the app
+// Exporting the app
 module.exports = app;

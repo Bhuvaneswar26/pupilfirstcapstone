@@ -86,6 +86,7 @@ const enrollcourse = async (request, response) => {
     await enrollment.create({
       userId: request.user.id,
       courseId: request.params.courseid,
+      status: true,
     });
     response.redirect("/student");
   } catch (error) {
