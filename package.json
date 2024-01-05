@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
+    "start:prod":"node  app.js",
     "db:create:test": "cross-env NODE_ENV=test npx sequelize-cli db:create",
     "pretest": "cross-env NODE_ENV=test sequelize-cli db:drop && cross-env NODE_ENV=test sequelize-cli db:create && cross-env NODE_ENV=test sequelize-cli db:migrate",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles",

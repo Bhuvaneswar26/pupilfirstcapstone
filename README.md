@@ -20,15 +20,14 @@ The project uses the following technologies:
 
 ## 🛠️ Project Setup
 
-1. Clone the repository: `git clone <repository-url>`
-2. Navigate to the project directory: `cd <project-directory>`
+1. Clone the repository
+2. Navigate to the project directory
 3. Install dependencies: `npm install`
 4. Start the application: `npm start`
 
 ## 🧪 Testing
 
 The project uses Jest for testing. To run the tests, use the following command: `npm test`
-
 
 ## 📝 License
 
