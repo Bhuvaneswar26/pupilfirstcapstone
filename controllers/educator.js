@@ -88,11 +88,9 @@ const getaddchapter = async (request, response) => {
       .render("error", { message: "Course not found" });
   }
   if (course.facultyId !== request.user.id) {
-    return response
-      .status(403)
-      .render("error", {
-        message: "You don't have permission to edit this course",
-      });
+    return response.status(403).render("error", {
+      message: "You don't have permission to edit this course",
+    });
   }
 
   const existingChapters = await Chapter.findAll({
