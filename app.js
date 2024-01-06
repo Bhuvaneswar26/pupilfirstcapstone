@@ -68,7 +68,9 @@ app.use(
 const sessionStore = new pgSession({
   conObject: {
     connectionString:
-      "postgres://postgres:0826%40ABHUVI@localhost:5432/lms_dev_db",
+      process.env.NODE_ENV === "production"
+        ? process.env.DATABASE_URL
+        : "postgres://postgres:0826%40ABHUVI@localhost:5432/lms_dev_db",
   },
   tableName: "sessions",
 });
