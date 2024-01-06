@@ -8,7 +8,7 @@
     "db:create:test": "cross-env NODE_ENV=test npx sequelize-cli db:create",
     "pretest": "cross-env NODE_ENV=test sequelize-cli db:drop && cross-env NODE_ENV=test sequelize-cli db:create && cross-env NODE_ENV=test sequelize-cli db:migrate",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
-    "prepare": "cd .. && husky install todo-app/.husky"
+    "prepare": "cd .. && husky install LMS/.husky"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
