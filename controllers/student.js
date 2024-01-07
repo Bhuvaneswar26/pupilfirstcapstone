@@ -88,8 +88,16 @@ const enrollcourse = async (request, response) => {
       courseId: request.params.courseid,
       status: true,
     });
-    response.redirect("/student");
+    if (request.accepts("html")) {
+      request.flash("success", "Course enrolled successfully");
+      return response.redirect("/student");
+    } else {
+      response.status(200).json({
+        message: "Course enrolled successfully",
+      });
+    }
   } catch (error) {
+    console.log("Error in enrollcourse", error);
     response.render("error", { message: "Error in enrollcourse" });
   }
 };

@@ -163,17 +163,30 @@ app.post(
     failureFlash: true,
   }),
   (request, response) => {
-    if (request.user.role === "educator") {
-      response.redirect("/educator");
+    if (request.accepts("html")) {
+      if (request.user.role === "educator") {
+        response.redirect("/educator");
+      } else {
+        response.redirect("/student");
+      }
     } else {
-      response.redirect("/student");
+      response.status(200).json({
+        user: request.user,
+        message: "Login successful",
+      });
     }
   },
 );
 
 app.use("/signup", csrfProtection, isLogedIn, signup);
 app.use("/educator", csrfProtection, logincheck, iseducator, educator);
-app.use("/student", logincheck, isstudent || iseducator, student);
+app.use(
+  "/student",
+  csrfProtection,
+  logincheck,
+  isstudent || iseducator,
+  student,
+);
 app.get("/signout", function (req, res) {
   req.logout(function (err) {
     if (err) {
@@ -209,11 +222,23 @@ app.put("/profile/changepassword", logincheck, async (request, response) => {
               },
             },
           );
-          request.flash("success", "Password changed successfully");
-          response.redirect("/profile");
+          if (request.accepts("html")) {
+            request.flash("success", "Password changed successfully");
+            return response.redirect("/profile");
+          } else {
+            response.status(200).json({
+              message: "Password changed successfully",
+            });
+          }
         } else {
-          request.flash("error", "Invalid Password");
-          response.redirect("/profile");
+          if (request.accepts("html")) {
+            request.flash("error", "Invalid Password");
+            return response.redirect("/profile");
+          } else {
+            response.status(400).json({
+              message: "Invalid Password",
+            });
+          }
         }
       },
     );

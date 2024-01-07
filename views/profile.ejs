@@ -37,9 +37,9 @@
     <form id="passwordForm" class="max-w-sm" action="/profile/changepassword" method="POST" enctype="application/x-www-form-urlencoded">
         <input name="_csrf" value="<%= csrfToken %>" type="hidden"/>
         <input type="hidden" name="_method" value="PUT" />
-        <label for="oldaassword" class="block text-sm font-medium text-gray-600">Old Password:</label>
+        <label for="oldpassword" class="block text-sm font-medium text-gray-600">Old Password:</label>
       <input type="password" id="oldpassword" name="oldpassword" class="mt-1 p-2 border rounded-md w-full" required>
-      <label for="newaassword" class="block text-sm font-medium text-gray-600">New Password:</label>
+      <label for="newpassword" class="block text-sm font-medium text-gray-600">New Password:</label>
       <input type="password" id="newpassword" name="newpassword" class="mt-1 p-2 border rounded-md w-full" required>
       <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Change Password</button>
       <%- include('partials/flashsuccess') %>

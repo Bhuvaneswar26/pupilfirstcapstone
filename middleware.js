@@ -38,6 +38,8 @@ const logincheck = (request, response, next) => {
   if (request.isAuthenticated()) {
     next();
   } else {
+    console.log("user", request.user);
+    console.log("test 2");
     response.redirect("/login");
   }
 };

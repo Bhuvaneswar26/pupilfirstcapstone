@@ -1,6 +1,5 @@
 const { Course, Chapter, Page, Pagecontent } = require("../models");
 const Sequelize = require("sequelize");
-console.log("hii", Chapter);
 const geteducator = async (request, response) => {
   try {
     const yourCourses = await Course.findAll({
@@ -16,13 +15,22 @@ const geteducator = async (request, response) => {
         },
       },
     });
-    response.render("educatorhome", {
-      error: request.flash("error"),
-      yourCourses,
-      otherCourses,
-      success: request.flash("success"),
-      name: request.user.firstName,
-    });
+
+    if (request.accepts("html")) {
+      return response.render("educatorhome", {
+        error: request.flash("error"),
+        yourCourses,
+        otherCourses,
+        success: request.flash("success"),
+        name: request.user.firstName,
+      });
+    } else {
+      response.status(200).json({
+        yourCourses,
+        otherCourses,
+        message: "educatorhome",
+      });
+    }
   } catch (error) {
     request.flash("error", error.message);
     return response.redirect("/educator");
@@ -36,14 +44,27 @@ const getcreatecourse = (request, response) => {
   });
 };
 
+//controoler for creating course
 const postcreatecourse = async (request, response) => {
   if (!request.body.coursename) {
-    request.flash("error", "Please enter the course name");
-    return response.redirect("/educator/createcourse");
+    if (request.accepts("html")) {
+      request.flash("error", "Please enter the course name");
+      return response.redirect("/educator/createcourse");
+    } else {
+      response.status(400).json({
+        message: "Please enter the course name",
+      });
+    }
   }
   if (!request.body.coursedescription) {
-    request.flash("error", "Please enter the course description");
-    return response.redirect("/educator/createcourse");
+    if (request.accepts("html")) {
+      request.flash("error", "Please enter the course description");
+      return response.redirect("/educator/createcourse");
+    } else {
+      response.status(400).json({
+        message: "Please enter the course description",
+      });
+    }
   }
 
   try {
@@ -53,16 +74,34 @@ const postcreatecourse = async (request, response) => {
       facultyId: request.user.id,
     })
       .then((course) => {
-        console.log("hhiii", course);
-        return response.redirect("addchapter/" + course.id);
+        if (request.accepts("html")) {
+          return response.redirect("addchapter/" + course.id);
+        } else {
+          return response.status(201).json({
+            course,
+            message: "course created successfully",
+          });
+        }
       })
       .catch((error) => {
-        request.flash("error", error.message);
-        return response.redirect("/educator/createcourse");
+        if (request.accepts("html")) {
+          request.flash("error", error.message);
+          return response.redirect("/educator/createcourse");
+        } else {
+          return response.status(400).json({
+            message: error.message,
+          });
+        }
       });
   } catch (error) {
-    request.flash("error", error.message);
-    return response.redirect("/educator/createcourse");
+    if (request.accepts("html")) {
+      request.flash("error", error.message);
+      return response.redirect("/educator/createcourse");
+    } else {
+      response.status(400).json({
+        message: error.message,
+      });
+    }
   }
 };
 
@@ -81,7 +120,6 @@ const geteditcourse = async (request, response) => {
 
 const getaddchapter = async (request, response) => {
   const course = await Course.findByPk(request.params.courseid);
-  console.log("hii", course, request.params.courseid);
   if (!course) {
     return response
       .status(404)
@@ -98,7 +136,7 @@ const getaddchapter = async (request, response) => {
       courseId: course.id,
     },
   });
-  console.log(existingChapters);
+
   return response.render("addchapter", {
     csrfToken: request.csrfToken(),
     course,
@@ -109,24 +147,62 @@ const getaddchapter = async (request, response) => {
 
 const postaddchapter = async (request, response) => {
   if (!request.params.courseid) {
-    request.flash("error", "courseid dosent exists");
-    return response.redirect("/educator/createcourse");
+    if (request.accepts("html")) {
+      request.flash("error", "courseid dosent exists");
+      return response.redirect("/educator/createcourse");
+    } else {
+      response.status(400).json({
+        message: "courseid dosent exists",
+      });
+    }
   }
   if (!request.body.chaptername) {
-    request.flash("error", "please enter chaptername");
-    return response.redirect("/educator/addchapter/" + request.params.courseid);
+    if (request.accepts("html")) {
+      request.flash("error", "please enter chaptername");
+      return response.redirect(
+        "/educator/addchapter/" + request.params.courseid,
+      );
+    } else {
+      response.status(400).json({
+        message: "please enter chaptername",
+      });
+    }
   }
   if (request.body.chapternumber && isNaN(request.body.chapternumber)) {
-    request.flash("error", "chapternumber should be a nummber");
-    return response.redirect("/educator/addchapter/" + request.params.courseid);
+    if (request.accepts("html")) {
+      request.flash("error", "chapternumber should be a nummber");
+      return response.redirect(
+        "/educator/addchapter/" + request.params.courseid,
+      );
+    } else {
+      response.status(400).json({
+        message: "chapternumber should be a nummber",
+      });
+    }
   }
   if (!request.body.chapternumber) {
-    request.flash("error", "please enter chapternumber");
-    return response.redirect("/educator/addchapter/" + request.params.courseid);
+    if (request.accepts("html")) {
+      request.flash("error", "please enter chapternumber");
+      return response.redirect(
+        "/educator/addchapter/" + request.params.courseid,
+      );
+    } else {
+      response.status(400).json({
+        message: "please enter chapternumber",
+      });
+    }
   }
   if (!request.body.chapterdescription) {
-    request.flash("error", "please enter description");
-    return response.redirect("/educator/addchapter/" + request.params.courseid);
+    if (request.accepts("html")) {
+      request.flash("error", "please enter description");
+      return response.redirect(
+        "/educator/addchapter/" + request.params.courseid,
+      );
+    } else {
+      response.status(400).json({
+        message: "please enter description",
+      });
+    }
   }
 
   try {
@@ -137,17 +213,34 @@ const postaddchapter = async (request, response) => {
       courseId: request.params.courseid,
     })
       .then((chapter) => {
-        console.log("created", chapter);
-        return response.redirect("/educator/editchapter/" + chapter.id);
+        if (request.accepts("html")) {
+          return response.redirect("/educator/editchapter/" + chapter.id);
+        } else {
+          return response.status(201).json({
+            chapter,
+            message: "chapter created successfully",
+          });
+        }
       })
       .catch((error) => {
-        console.log("created", error);
-        request.flash("error", error.message);
-        return response.redirect("editcourse/" + request.courseid);
+        if (request.accepts("html")) {
+          request.flash("error", error.message);
+          return response.redirect("editcourse/" + request.courseid);
+        } else {
+          return response.status(400).json({
+            message: error.message,
+          });
+        }
       });
   } catch (error) {
-    request.flash("error", error.message);
-    return response.redirect("editcourse/" + request.courseid);
+    if (request.accepts("html")) {
+      request.flash("error", error.message);
+      return response.redirect("editcourse/" + request.courseid);
+    } else {
+      return response.status(400).json({
+        message: error.message,
+      });
+    }
   }
 };
 
@@ -164,13 +257,20 @@ const geteditchapter = async (request, response) => {
     },
   })
     .then((pages) => {
-      console.log(pages);
-      return response.render("editchapter", {
-        csrfToken: request.csrfToken(),
-        chapter,
-        pages,
-        error: request.flash("error"),
-      });
+      if (request.accepts("html")) {
+        return response.render("editchapter", {
+          csrfToken: request.csrfToken(),
+          chapter,
+          pages,
+          error: request.flash("error"),
+        });
+      } else {
+        return response.status(200).json({
+          chapter,
+          pages,
+          message: "editchapter",
+        });
+      }
     })
     .catch((error) => {
       request.flash("error", error.message);
@@ -181,8 +281,6 @@ const geteditchapter = async (request, response) => {
 };
 
 const patcheditchapter = async (request, response) => {
-  console.log("hiii", request.params.chapterid);
-
   if (!request.params.chapterid) {
     request.flash("error", "chapterid dosent exists");
     return response.redirect("/educator/createcourse");
@@ -218,20 +316,24 @@ const patcheditchapter = async (request, response) => {
         where: {
           id: request.params.chapterid,
         },
-        returning: true, // This option is necessary to get the updated record
-        plain: true, // This option ensures only the updated record is returned
+        returning: true,
+        plain: true,
       },
     );
 
-    console.log("updated", updatedChapter);
-
     if (updatedChapter[1]) {
-      // The second element of the result array indicates the number of rows affected (1 for success)
-      return response.redirect(
-        "/educator/editchapter/" + request.params.chapterid,
-      );
+      if (request.accepts("html")) {
+        return response.redirect(
+          "/educator/editchapter/" + request.params.chapterid,
+        );
+      } else {
+        console.log("updated", updatedChapter[1]);
+        return response.status(200).json({
+          updatedChapter: updatedChapter[1],
+          message: "chapter updated successfully",
+        });
+      }
     } else {
-      // If no rows were affected, it means the chapter with the given id was not found
       throw new Error("Chapter not found");
     }
   } catch (error) {
@@ -266,10 +368,13 @@ const postaddpage = async (request, response) => {
       chapterId: request.params.chapterid,
     })
       .then((page) => {
-        console.log("created", page);
-        return response.redirect(
-          "/educator/editchapter/" + request.params.chapterid,
-        );
+        if (request.accepts("html")) {
+          return response.redirect("/educator/addcontent/" + page.id);
+        } else {
+          return response
+            .status(201)
+            .json({ page, message: "page created successfully" });
+        }
       })
       .catch((error) => {
         console.log("created", error);
@@ -294,13 +399,20 @@ const getaddcontent = async (request, response) => {
     order: [["sectionNumber", "ASC"]],
   })
     .then((pagecontents) => {
-      console.log(pagecontents);
-      return response.render("addcontent", {
-        csrfToken: request.csrfToken(),
-        page,
-        pagecontents,
-        error: request.flash("error"),
-      });
+      if (request.accepts("html")) {
+        return response.render("addcontent", {
+          csrfToken: request.csrfToken(),
+          page,
+          pagecontents,
+          error: request.flash("error"),
+        });
+      } else {
+        return response.status(201).json({
+          page,
+          pagecontents,
+          message: "addcontent",
+        });
+      }
     })
     .catch((error) => {
       request.flash("error", error.message);
@@ -357,7 +469,15 @@ const postaddcontent = async (request, response) => {
         });
       }
 
-      return response.redirect("/educator/addcontent/" + request.params.pageid);
+      if (request.accepts("html")) {
+        return response.redirect(
+          "/educator/addcontent/" + request.params.pageid,
+        );
+      } else {
+        return response.status(201).json({
+          message: "content added successfully",
+        });
+      }
     } catch (error) {
       request.flash("error", error.message);
       console.log(error.message);
@@ -396,18 +516,16 @@ const puteditcontent = async (request, response) => {
         where: {
           id: request.params.sectionid,
         },
-        returning: true, // This option is necessary to get the updated record
-        plain: true, // This option ensures only the updated record is returned
+        returning: true,
+        plain: true,
       },
     );
 
     console.log("updated", updatedPagecontent);
 
     if (updatedPagecontent[1]) {
-      // The second element of the result array indicates the number of rows affected (1 for success)
       return response.redirect("/educator/addcontent/" + request.params.pageid);
     } else {
-      // If no rows were affected, it means the chapter with the given id was not found
       throw new Error("Pagecontent not found");
     }
   } catch (error) {
