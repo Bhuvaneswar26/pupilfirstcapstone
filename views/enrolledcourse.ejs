@@ -1,0 +1,94 @@
+<!-- studentDashboard.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/ba6d17dfa2.js" crossorigin="anonymous"></script>
+   
+</head>
+
+<body class="font-sans bg-gray-100 min-h-screen">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-500 p-4 text-white flex items-center justify-between">
+        <div class="flex items-center">
+            <a href="/login" class="text-4xl font-semibold">LMS</a>
+        </div>
+
+        <div class="flex items-center space-x-8">
+            <!-- Dashboard Link -->
+            <a href="/login" class="hover:underline text-lg">Dashboard<i
+                    class="fas fa-table-columns ml-2"></i></a>
+
+            <a href="/profile" class="hover:underline text-lg">Profile<i class="far fa-user ml-2"></i></a>
+
+            <a href="/signout" class="hover:underline text-lg">SignOut<i
+                    class="fas fa-arrow-right-from-bracket ml-2"></i></a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-8">
+
+        <!-- Course Information and Reports -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <!-- Course Information -->
+            <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h1 class="text-4xl font-semibold mb-6">Course: <%= course.courseName %></h1>
+
+                <!-- Chapters -->
+                <div class="mb-4">
+                    <h2 class="text-2xl mb-2">Chapters</h2>
+                    <% if(coursechapters.length == 0){ %>
+                    <p class="text-lg">No Chapters Available</p>
+                    <% } %>
+                    <p class="mb-2"><strong>Number of Chapters:</strong> <%= coursechapters.length %></p>
+                    <ul>
+                        <% coursechapters.forEach((chapter) => { %>
+                        <a href="/student/chapter/<%= chapter.id %>">
+                            <li class="<%= chapter.completed ? 'chapter-completed' : 'chapter-not-completed' %> mb-2 p-3 rounded">
+                                Chapter <%= chapter.chapterNumber %>: <%= chapter.chapterName %>
+                                <i class="<%= chapter.completed ? 'fas fa-check-circle' : 'far fa-circle' %> ml-2"></i>
+                            </li>
+                        </a>
+                        <% }) %>
+                    </ul>
+                    
+                </div>
+            </section>
+
+            <!-- Reports or Status -->
+            <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h2 class="text-2xl mb-4">Course Reports</h2>
+                <p class="mb-2"><strong>Total Chapters:</strong> <%= totalchapters %></p>
+                <p class="mb-2"><strong>Completed Chapters:</strong> <%= completedchapters %></p>
+                <p class="mb-2"><strong>Your progress(Chapter wise):</strong><%= (completedchapters/totalchapters)*100 %>% </p>
+                <p class="mb-2"><strong>Your progress(Page wise):</strong></p>
+                <p class="mb-2"><strong>Total page:</strong><%= totalpages %></p>
+                <p class="mb-2"><strong>Completed page:</strong><%= completedpages %></p>
+                <p class="mb-4"><strong>Status:</strong> <%= (completedpages/totalpages)*100 %>%</p>
+            </section>
+
+        </div>
+    </div>
+
+    <style>
+        .chapter-completed {
+            background-color: #68D391; /* Green background for completed chapters */
+            color: #fff; /* White text for completed chapters */
+        }
+
+        .chapter-not-completed {
+            background-color: #CBD5E0; /* Gray background for not completed chapters */
+            color: #1A202C; /* Dark text for not completed chapters */
+        }
+    </style>
+
+</body>
+
+</html>

@@ -35,9 +35,12 @@
           <input type="hidden" name="_method" value="PUT" />
           <label for="sectiontype" class="block mb-2">Section Type:</label>
           <select id="sectiontype" name="sectiontype" class="w-full border border-gray-300 rounded-md p-2" required>
-            <option value="text" <%= section.sectionType === "text" ? 'selected' : '' %>>Text</option>
-            <option value="image" <%= section.sectionType === "image" ? 'selected' : '' %>>Image</option>
-            <option value="video" <%= section.sectionType === "video" ? 'selected' : '' %>>Video</option>
+            <option value="text" <%= section.type === "text" ? 'selected' : '' %>>Text</option>
+            <option value="heading" <%= section.type === "heading" ? 'selected' : '' %>>Heading</option>
+            <option value="code" <%= section.type === "code" ? 'selected' : '' %>>Code</option>
+            <option value="note" <%= section.type === "note" ? 'selected' : '' %>>Note</option>
+            <option value="important" <%= section.type === "important" ? 'selected' : '' %>>Important Text</option>
+            <option value="video" <%= section.type === "video" ? 'selected' : '' %>>Video</option>
           </select>
           <div class="mb-4">
             <label for="sectioncontent" class="block mb-2">Section Content:</label>
@@ -50,7 +53,7 @@
 
     <!-- Page Form -->
     <section class="bg-white p-6 rounded-lg shadow-md mb-8">
-      <h1 class="text-4xl font-semibold mb-6">Add Page</h1>
+      <h1 class="text-4xl font-semibold mb-6">Add Page content</h1>
       <!-- Number of Sections -->
       <div class="mb-4">
         <label for="numSections" class="block mb-2">Number of Sections to be added:</label>
@@ -72,6 +75,14 @@
   <%- include('partials/footer') %>
 
   <script>
+    if(document.getElementById("numSections") != null){
+      document.getElementById("numSections").addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+          event.preventDefault();
+          document.getElementById("submit").click();
+        }
+      });
+    }
     function nofosubmit() {
       var nofo = document.getElementById("numSections").value;
       var form = document.getElementsByClassName("pagessection")[0];
@@ -79,6 +90,10 @@
       const existnumSections = document.getElementsByName("existnumSections")[0].value;
       let start = Number(existnumSections);
       let end = Number(nofo) + Number(existnumSections);
+      if(nofo <= 0) {
+        alert("Please enter a valid number");
+        return;
+      }
       for (var i = start; i < end; i++) {
         form.innerHTML += `
           <div class='mb-8 bg-white p-6 rounded-lg shadow-md'>
@@ -86,8 +101,11 @@
             <label for='sectionType${i + 1}' class='block mb-2'>Section Type:</label>
             <select id='sectionType${i + 1}' name='sectionType${i + 1}' class='w-full border border-gray-300 rounded-md p-2' required>
               <option value='text'>Text</option>
-              <option value='image'>Image</option>
+              <option value='heading'>Heading</option>
+              <option value='code'>Code</option>
               <option value='video'>Video</option>
+              <option value='heading'>Heading</option>
+              <option value='important'>Important</option>
             </select>
             <div class='mb-4'>
               <label for='sectionContent${i + 1}' class='block mb-2'>Section Content:</label>

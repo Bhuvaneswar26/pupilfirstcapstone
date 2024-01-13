@@ -180,13 +180,8 @@ app.post(
 
 app.use("/signup", csrfProtection, isLogedIn, signup);
 app.use("/educator", csrfProtection, logincheck, iseducator, educator);
-app.use(
-  "/student",
-  csrfProtection,
-  logincheck,
-  isstudent || iseducator,
-  student,
-);
+app.use("/student", csrfProtection, logincheck, student);
+
 app.get("/signout", function (req, res) {
   req.logout(function (err) {
     if (err) {

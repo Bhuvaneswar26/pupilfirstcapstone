@@ -1,4 +1,12 @@
-const { Course, Chapter, Page, Pagecontent } = require("../models");
+const {
+  User,
+  Course,
+  Chapter,
+  Page,
+  Pagecontent,
+  enrollment,
+  coursestatus,
+} = require("../models");
 const Sequelize = require("sequelize");
 const geteducator = async (request, response) => {
   try {
@@ -8,12 +16,51 @@ const geteducator = async (request, response) => {
       },
     });
 
+    await Promise.all(
+      yourCourses.map(async (course) => {
+        const enrollnumber = await enrollment.findAll({
+          where: {
+            courseId: course.id,
+          },
+        });
+
+        course.enrollments = enrollnumber.length;
+      }),
+    );
+
     const otherCourses = await Course.findAll({
       where: {
         facultyId: {
           [Sequelize.Op.not]: request.user.id,
         },
       },
+    });
+
+    await Promise.all(
+      otherCourses.map(async (course) => {
+        const enrollnumber = await enrollment.findAll({
+          where: {
+            courseId: course.id,
+          },
+        });
+        course.enrollments = enrollnumber.length;
+
+        const faculty = await User.findOne({
+          where: {
+            id: course.facultyId,
+          },
+        });
+        course.instructor = faculty.firstName;
+      }),
+    );
+
+    //sorting enrolledcourses based on enrolledcount
+    yourCourses.sort((a, b) => {
+      return b.enrollments - a.enrollments;
+    });
+
+    otherCourses.sort((a, b) => {
+      return b.enrollments - a.enrollments;
     });
 
     if (request.accepts("html")) {
@@ -535,6 +582,87 @@ const puteditcontent = async (request, response) => {
   }
 };
 
+const getreports = async (request, response) => {
+  const facultyId = request.user.id;
+
+  const courses = await Course.findAll({
+    where: {
+      facultyId: facultyId,
+    },
+  });
+
+  console.log(courses, "type", typeof courses);
+
+  return response.render("reports", {
+    courses,
+    error: request.flash("error"),
+  });
+};
+
+const getcoursereports = async (request, response) => {
+  const courseId = request.params.courseid;
+
+  const enrollments = await enrollment.findAll({
+    where: {
+      courseId: courseId,
+    },
+  });
+
+  const students = await Promise.all(
+    enrollments.map(async (enrollment) => {
+      const student = await User.findByPk(enrollment.userId);
+      return student;
+    }),
+  );
+
+  // Finding the percentage of chapters completed
+
+  const chapters = await Chapter.findAll({
+    where: {
+      courseId: courseId,
+    },
+  });
+
+  const pages = await Page.findAll({
+    where: {
+      chapterId: chapters.map((chapter) => chapter.id),
+    },
+  });
+
+  let totalpages = pages.length;
+
+  await Promise.all(
+    students.map(async (student) => {
+      let completedpages = 0;
+
+      await Promise.all(
+        pages.map(async (page) => {
+          const pagestatus = await coursestatus.findOne({
+            where: {
+              pageId: page.id,
+              userId: student.id,
+            },
+          });
+
+          if (pagestatus) {
+            completedpages++;
+          }
+        }),
+      );
+
+      student.percentage = (completedpages / totalpages) * 100;
+      console.log("percentage", student.percentage);
+    }),
+  );
+
+  console.log(students);
+
+  return response.render("coursereports", {
+    students,
+    error: request.flash("error"),
+  });
+};
+
 module.exports = {
   geteducator,
   getcreatecourse,
@@ -548,4 +676,6 @@ module.exports = {
   postaddcontent,
   puteditcontent,
   geteditcourse,
+  getreports,
+  getcoursereports,
 };

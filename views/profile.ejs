@@ -7,47 +7,130 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://kit.fontawesome.com/ba6d17dfa2.js" crossorigin="anonymous"></script>
   <title>Profile</title>
+
+  <style>
+    .container {
+      width: 400px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      background-color: #ebf8ff; /* Light Blue Background Color */
+    }
+
+    nav {
+      background-color: #4299e1; /* Light Blue Navbar Background Color */
+      color: #ffffff;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #2c5282; /* Darker Blue Border */
+    }
+
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1rem;
+      margin-right: 1rem;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #d1d5db;
+    }
+
+    .profile-content {
+      padding: 20px;
+    }
+
+    .profile-content h2 {
+      font-size: 1.5rem;
+      color: #2c5282; /* Darker Blue Text Color */
+      margin-bottom: 1rem;
+    }
+
+    .profile-content p {
+      color: #4a5568;
+      margin-bottom: 0.5rem;
+    }
+
+    .change-password-form {
+      margin-top: 1.5rem;
+    }
+
+    .change-password-form label {
+      display: block;
+      font-size: 0.875rem;
+      color: #4a5568;
+      margin-bottom: 0.5rem;
+    }
+
+    .change-password-form input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #a0aec0; /* Lighter Blue Border Color */
+      border-radius: 0.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .change-password-form button {
+      background-color: #4299e1; /* Light Blue Button Color */
+      color: #ffffff;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .change-password-form button:hover {
+      background-color: #2c5282; /* Darker Blue Hover Color */
+    }
+
+    footer {
+      background-color: #4299e1; /* Light Blue Footer Background Color */
+      color: #ffffff;
+      text-align: center;
+    }
+  </style>
 </head>
-<body class="bg-gray-100">
+<body>
+
   <!-- Navbar -->
-  <nav class="bg-blue-500 p-4 text-white flex items-center justify-between">
-    <div class="flex items-center">
-      <a href="/login"><span class="text-4xl font-semibold">LMS</span></a>
+  <nav>
+    <div>
+      <a href="/login"><span class="text-2xl font-semibold text-white">LMS</span></a>
     </div>
-    <div class="flex items-center space-x-8">
-      <!-- Dashboard Link -->
-      <a href="/login" class="hover:underline text-lg">Dashboard<i class="fa-solid fa-table-columns ml-2"></i></a>
-
-      <a href="/profile" class="hover:underline text-lg">Profile<i class="fa-regular fa-user ml-2"></i></a>
-
-      <a href="/signout" class="hover:underline text-lg">SignOut<i class="fa-solid fa-arrow-right-from-bracket ml-2"></i></a>
+    <div>
+      <a href="/login">Dashboard<i class="fa-solid fa-table-columns ml-2"></i></a>
+      <a href="/profile">Profile<i class="fa-regular fa-user ml-2"></i></a>
+      <a href="/signout">SignOut<i class="fa-solid fa-arrow-right-from-bracket ml-2"></i></a>
     </div>
   </nav>
 
   <!-- Profile Content -->
-  <div class="container mx-auto mt-8 p-6 bg-white rounded shadow-lg">
+  <div class="container mx-auto mt-8 profile-content">
     <h2 class="text-2xl font-semibold mb-4">User Profile</h2>
     <div class="mb-4">
-      <p class="text-lg"><strong>Firsst Name:</strong> <span id="username"><%= user.firstName %></span></p>
+      <p class="text-lg"><strong>First Name:</strong> <span id="username"><%= user.firstName %></span></p>
       <p class="text-lg"><strong>Last Name:</strong> <span id="lastName"><%= user.lastName %></span></p>
       <p class="text-lg"><strong>Email:</strong> <span id="email"><%= user.email %></span></p>
     </div>
-  
+
     <!-- Change Password Form -->
-    <form id="passwordForm" class="max-w-sm" action="/profile/changepassword" method="POST" enctype="application/x-www-form-urlencoded">
-        <input name="_csrf" value="<%= csrfToken %>" type="hidden"/>
-        <input type="hidden" name="_method" value="PUT" />
-        <label for="oldpassword" class="block text-sm font-medium text-gray-600">Old Password:</label>
-      <input type="password" id="oldpassword" name="oldpassword" class="mt-1 p-2 border rounded-md w-full" required>
-      <label for="newpassword" class="block text-sm font-medium text-gray-600">New Password:</label>
-      <input type="password" id="newpassword" name="newpassword" class="mt-1 p-2 border rounded-md w-full" required>
-      <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Change Password</button>
+    <form id="passwordForm" class="max-w-sm change-password-form" action="/profile/changepassword" method="POST" enctype="application/x-www-form-urlencoded">
+      <input name="_csrf" value="<%= csrfToken %>" type="hidden"/>
+      <input type="hidden" name="_method" value="PUT" />
+      <label for="oldpassword">Old Password:</label>
+      <input type="password" id="oldpassword" name="oldpassword" required>
+      <label for="newpassword">New Password:</label>
+      <input type="password" id="newpassword" name="newpassword" required>
+      <button type="submit">Change Password</button>
       <%- include('partials/flashsuccess') %>
       <%- include('partials/flashmessage') %>
     </form>
   </div>
 
-  <%- include('partials/footer') %>
 
 </body>
 </html>

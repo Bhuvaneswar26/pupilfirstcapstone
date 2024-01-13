@@ -1,0 +1,67 @@
+<!-- chapterDetails.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/ba6d17dfa2.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="font-sans bg-gray-100 min-h-screen">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-500 p-4 text-white flex items-center justify-between">
+        <div class="flex items-center">
+            <a href="/login" class="text-4xl font-semibold">LMS</a>
+        </div>
+
+        <div class="flex items-center space-x-8">
+            <!-- Dashboard Link -->
+            <a href="/login" class="hover:underline text-lg">Dashboard<i
+                    class="fas fa-table-columns ml-2"></i></a>
+
+            <a href="/profile" class="hover:underline text-lg">Profile<i class="far fa-user ml-2"></i></a>
+
+            <a href="/signout" class="hover:underline text-lg">SignOut<i
+                    class="fas fa-arrow-right-from-bracket ml-2"></i></a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-8">
+
+        <!-- Chapter Details -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h1 class="text-4xl font-semibold mb-6">Chapter: <%= chapter.chapterName %></h1>
+
+            <!-- Pages -->
+            <div class="mb-4">
+                <h2 class="text-2xl mb-2">Pages</h2>
+                <ul>
+                    <% pages.forEach((page) => { %>
+                        <% if(page.completed == true) {%>
+                        <a href="/student/chapterpages/<%= chapter.id %>/<%= page.id %>/true">
+                            <li class="page completed bg-green-500 text-white mb-2 p-3 rounded">
+                                Page <%= page.pageNumber %> : <%= page.pageName %> 
+                            </li>
+                        </a>
+                        <% } else { %>
+                        <a href="/student/chapterpages/<%= chapter.id %>/<%= page.id %>/false">
+                            <li class="page bg-gray-500 text-white mb-2 p-3 rounded">
+                                Page <%= page.pageNumber %> : <%= page.pageName %> 
+                            </li>
+                    <% }}) %>
+                </ul>
+            </div>
+            <button class="bg-yellow-400 text-gray-800 px-4 py-2 rounded-full">
+                <a href="/student/enrolledcourse/<%= courseid %>" style="padding: 4;">Go Back to course</a>
+            </button>
+        </section>
+    </div>
+
+</body>
+
+</html>

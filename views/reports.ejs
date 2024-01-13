@@ -1,0 +1,60 @@
+<!-- allCourses.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Courses</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/ba6d17dfa2.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="font-sans bg-gray-100 min-h-screen">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-500 p-4 text-white flex items-center justify-between">
+        <div class="flex items-center">
+            <a href="/login" class="text-4xl font-semibold">LMS</a>
+        </div>
+
+        <div class="flex items-center space-x-8">
+            <!-- Dashboard Link -->
+            <a href="/login" class="hover:underline text-lg">Dashboard<i
+                    class="fas fa-table-columns ml-2"></i></a>
+
+            <a href="/profile" class="hover:underline text-lg">Profile<i class="far fa-user ml-2"></i></a>
+
+            <a href="/signout" class="hover:underline text-lg">SignOut<i
+                    class="fas fa-arrow-right-from-bracket ml-2"></i></a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-8">
+
+        <!-- All Courses -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h1 class="text-4xl font-semibold mb-6">All Courses</h1>
+
+            <!-- Course List -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <%= console.log(typeof courses) %>                                                                                                                                   
+                <% courses.forEach((course) => { %>
+                    <div class="bg-gray-200 p-6 rounded-lg">
+                        <h2 class="text-xl font-semibold mb-4"><%= course.courseName %></h2>
+                        <p class="text-gray-700 mb-4"><%= course.description %></p>
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-full">
+                            <a href="/educator/reports/<%= course.id %>">
+                                <i class="far fa-chart-bar mr-2"></i> Show Report
+                            </a>
+                        </button>
+                    </div>
+                <% }) %>
+            </div>
+        </section>
+    </div>
+
+</body>
+
+</html>

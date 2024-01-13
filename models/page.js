@@ -1,17 +1,26 @@
 "use strict";
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Page extends Model {
     static associate(models) {
-      Page.belongsTo(models.Chapter, {
-        foreignKey: "chapterId",
+      // The association methods should be called directly on the model class
+      Page.hasMany(models.coursestatus, {
+        foreignKey: "pageId",
+        onDelete: "CASCADE",
       });
 
       Page.hasMany(models.Pagecontent, {
         foreignKey: "pageId",
+        onDelete: "CASCADE",
+      });
+
+      Page.belongsTo(models.Chapter, {
+        foreignKey: "chapterId",
       });
     }
   }
+
   Page.init(
     {
       pageNumber: DataTypes.INTEGER,
@@ -22,5 +31,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Page",
     },
   );
+
   return Page;
 };

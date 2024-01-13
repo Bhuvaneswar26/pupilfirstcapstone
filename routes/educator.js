@@ -13,6 +13,8 @@ const {
   getaddcontent,
   postaddcontent,
   puteditcontent,
+  getreports,
+  getcoursereports,
 } = require("../controllers/educator");
 
 route.get("/", geteducator);
@@ -27,5 +29,7 @@ route.post("/addpage/:chapterid", postaddpage);
 route.get("/addcontent/:pageid", getaddcontent);
 route.post("/addcontent/:pageid/:noofinputs", postaddcontent);
 route.put("/editcontent/:pageid/:sectionid", puteditcontent);
+route.get("/reports", getreports);
+route.get("/reports/:courseid", getcoursereports);
 
 module.exports = route;
