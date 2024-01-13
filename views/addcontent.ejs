@@ -51,10 +51,10 @@
       </form>
     <% }) %>
 
-    <!-- Page Form -->
+    <!-- Page form -->
     <section class="bg-white p-6 rounded-lg shadow-md mb-8">
       <h1 class="text-4xl font-semibold mb-6">Add Page content</h1>
-      <!-- Number of Sections -->
+      <!-- Number of sections -->
       <div class="mb-4">
         <label for="numSections" class="block mb-2">Number of Sections to be added:</label>
         <input type="text" value="<%= page.id %>" class="chapterid" hidden>
@@ -62,9 +62,8 @@
       </div>
       <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md" onclick="nofosubmit()">Submit</button>
 
-      <!-- Section Types -->
       <form action="" method="post" class="pagessection">
-        <!-- number of section will be filled automatically based on  input givens -->
+        <!-- number of section will be filled automatically based on  input given -->
         <input name="existnumSections" value="<%= pagecontents.length %>" type="hidden"/>
         <input name="_csrf" value="<%= csrfToken %>" type="hidden"/>
       </form>

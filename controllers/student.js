@@ -27,6 +27,28 @@ const getstudent = async (request, response) => {
       response.redirect("/student");
     }
 
+    //finding faculty name and enrolledcount of each course
+
+    for (const element of enrolledcourses) {
+      try {
+        const data = await enrollment.findAll({
+          where: { courseId: element.id },
+        });
+
+        const user = await models.User.findOne({
+          where: { id: element.facultyId },
+        });
+
+        element.facultyName = user.firstName;
+
+        let enrolledcount = data.length;
+
+        element.enrolledcount = enrolledcount;
+      } catch (error) {
+        console.error("Error checking enrollment:", error);
+      }
+    }
+
     //sorting enrolledcourses based on enrolledcount
     enrolledcourses.sort((a, b) => {
       return b.enrolledcount - a.enrolledcount;
@@ -102,7 +124,7 @@ const enrollcourse = async (request, response) => {
     });
     if (request.accepts("html")) {
       request.flash("success", "Course enrolled successfully");
-      if (request.user.type == "student") {
+      if (request.user.role == "student") {
         return response.redirect("/student");
       } else {
         return response.redirect("/educator");
@@ -113,7 +135,6 @@ const enrollcourse = async (request, response) => {
       });
     }
   } catch (error) {
-    console.log("Error in enrollcourse", error);
     response.render("error", { message: "Error in enrollcourse" });
   }
 };
@@ -278,8 +299,6 @@ const getpagecontent = async (request, response) => {
   });
 
   let courseid = courseId.courseId;
-
-  console.log("rquest json", request.body);
   if (!request.params.pageid) {
     return response.render("error", { message: "page id not found" });
   }
@@ -340,9 +359,6 @@ const markascompleted = async (request, response) => {
     });
 
     //adding enrollment status  in the tabl
-    console.log("request user id", request.user.id);
-    console.log("chapter id", chapter.courseId);
-    console.log(request.params.pageid);
     await coursestatus.create({
       userId: request.user.id,
       courseId: chapter.courseId,
@@ -352,7 +368,6 @@ const markascompleted = async (request, response) => {
 
     if (request.accepts("html")) {
       request.flash("success", "Course marked as completed successfully");
-      console.log("entered");
       return response.redirect(
         "/student/chapterpages/" +
           chapter.id +

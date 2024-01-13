@@ -54,7 +54,6 @@ const geteducator = async (request, response) => {
       }),
     );
 
-    //sorting enrolledcourses based on enrolledcount
     yourCourses.sort((a, b) => {
       return b.enrollments - a.enrollments;
     });
@@ -91,7 +90,6 @@ const getcreatecourse = (request, response) => {
   });
 };
 
-//controoler for creating course
 const postcreatecourse = async (request, response) => {
   if (!request.body.coursename) {
     if (request.accepts("html")) {
@@ -158,7 +156,6 @@ const geteditcourse = async (request, response) => {
       facultyId: request.user.id,
     },
   });
-  console.log(courses);
   return response.render("editcourse", {
     courses,
     error: request.flash("error"),
@@ -374,7 +371,6 @@ const patcheditchapter = async (request, response) => {
           "/educator/editchapter/" + request.params.chapterid,
         );
       } else {
-        console.log("updated", updatedChapter[1]);
         return response.status(200).json({
           updatedChapter: updatedChapter[1],
           message: "chapter updated successfully",
@@ -384,7 +380,6 @@ const patcheditchapter = async (request, response) => {
       throw new Error("Chapter not found");
     }
   } catch (error) {
-    console.error("update failed", error);
     request.flash("error", error.message);
     return response.redirect("/editcourse/" + request.courseid);
   }
@@ -424,7 +419,6 @@ const postaddpage = async (request, response) => {
         }
       })
       .catch((error) => {
-        console.log("created", error);
         request.flash("error", error.message);
         return response.redirect("editcourse/" + request.courseid);
       });
@@ -501,13 +495,10 @@ const postaddcontent = async (request, response) => {
     try {
       let start = Number(noofexisting) + 1;
       let end = Number(noofinputs) + Number(noofexisting) + 1;
-      console.log(start, end);
       for (let i = start; i < end; i++) {
         let j = i;
         let sectionType = "sectionType" + j;
         let sectionContent = "sectionContent" + j;
-        console.log(request.body[sectionType]);
-        console.log(request.body[sectionContent]);
         await Pagecontent.create({
           sectionNumber: i,
           type: request.body[sectionType],
@@ -527,7 +518,6 @@ const postaddcontent = async (request, response) => {
       }
     } catch (error) {
       request.flash("error", error.message);
-      console.log(error.message);
       return response.redirect("/educator/addcontent/" + request.params.pageid);
     }
   }
@@ -568,15 +558,12 @@ const puteditcontent = async (request, response) => {
       },
     );
 
-    console.log("updated", updatedPagecontent);
-
     if (updatedPagecontent[1]) {
       return response.redirect("/educator/addcontent/" + request.params.pageid);
     } else {
       throw new Error("Pagecontent not found");
     }
   } catch (error) {
-    console.error("update failed", error);
     request.flash("error", error.message);
     return response.redirect("/educator/addcontent/" + request.params.pageid);
   }
@@ -590,8 +577,6 @@ const getreports = async (request, response) => {
       facultyId: facultyId,
     },
   });
-
-  console.log(courses, "type", typeof courses);
 
   return response.render("reports", {
     courses,
@@ -614,8 +599,6 @@ const getcoursereports = async (request, response) => {
       return student;
     }),
   );
-
-  // Finding the percentage of chapters completed
 
   const chapters = await Chapter.findAll({
     where: {
@@ -651,11 +634,8 @@ const getcoursereports = async (request, response) => {
       );
 
       student.percentage = (completedpages / totalpages) * 100;
-      console.log("percentage", student.percentage);
     }),
   );
-
-  console.log(students);
 
   return response.render("coursereports", {
     students,
