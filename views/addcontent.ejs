@@ -44,7 +44,7 @@
           </select>
           <div class="mb-4">
             <label for="sectioncontent" class="block mb-2">Section Content:</label>
-            <textarea id="sectioncontent" name="sectioncontent" class="w-full border border-gray-300 rounded-md p-2 mb-4 h-24" required><%= section.content %></textarea>
+            <textarea id="sectioncontent" name="sectioncontent" class="w-full border border-gray-300 rounded-md p-2 mb-4 h-24" required ><%= section.content %></textarea>
           </div>
           <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md" >Save changes</button>
         </div>
@@ -108,7 +108,7 @@
             </select>
             <div class='mb-4'>
               <label for='sectionContent${i + 1}' class='block mb-2'>Section Content:</label>
-              <textarea id='sectionContent${i + 1}' name='sectionContent${i + 1}' class='w-full border border-gray-300 rounded-md p-2 mb-4 h-24' required></textarea>
+              <textarea id='sectionContent${i + 1}' name='sectionContent${i + 1}' class='w-full border border-gray-300 rounded-md p-2 mb-4 h-24' required placeholder='if the content type id video please input the unique id of the iframe link here no the whole iframe.go to youtube and click on share button you will get embed option then you will get a ifram tag in  that link copy thr unique id herenpms'></textarea>
             </div>
           </div>`;
       }

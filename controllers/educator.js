@@ -578,6 +578,24 @@ const getreports = async (request, response) => {
     },
   });
 
+  //the  courses reports should also  show the noof enrolments algong  with name andin sorting order
+
+  await Promise.all(
+    courses.map(async (course) => {
+      const enrollnumber = await enrollment.findAll({
+        where: {
+          courseId: course.id,
+        },
+      });
+
+      course.enrollments = enrollnumber.length;
+    }),
+  );
+
+  courses.sort((a, b) => {
+    return b.enrollments - a.enrollments;
+  });
+
   return response.render("reports", {
     courses,
     error: request.flash("error"),

@@ -340,4 +340,13 @@ describe("Test Features of Student", () => {
       .set("Accept", "application/json");
     expect(response.statusCode).toBe(200);
   });
+
+  test("Test enroll course POST method of Student", async () => {
+    const csrfToken = extractCsrfToken(await agent.get("/student"));
+    const response = await agent.get("/student/enroll/1").send({
+      courseid: 1,
+      _csrf: csrfToken,
+    });
+    expect(response.statusCode).toBe(200);
+  });
 });
