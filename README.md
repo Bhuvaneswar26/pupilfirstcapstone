@@ -84,7 +84,7 @@ The **Controller** component acts as an intermediary between the model and view.
 
 Below is the visual representation of the database schema used in this project:
 
-![Database Schema](lms/public/images/Blankdiagram.png)
+![Database Schema](public/images/Blankdiagram.png)
 
 ## ✨ Project Features
 
