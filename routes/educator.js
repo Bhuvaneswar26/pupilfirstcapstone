@@ -15,6 +15,10 @@ const {
   puteditcontent,
   getreports,
   getcoursereports,
+  deletecourse,
+  deletechapter,
+  deletepage,
+  deletecontent,
 } = require("../controllers/educator");
 
 route.get("/", geteducator);
@@ -31,5 +35,9 @@ route.post("/addcontent/:pageid/:noofinputs", postaddcontent);
 route.put("/editcontent/:pageid/:sectionid", puteditcontent);
 route.get("/reports", getreports);
 route.get("/reports/:courseid", getcoursereports);
+route.get("/deletecourse/:courseid", deletecourse);
+route.get("/deletechapter/:chapterid", deletechapter);
+route.get("/deletepage/:pageid", deletepage);
+route.get("/deletecontent/:contentid", deletecontent);
 
 module.exports = route;

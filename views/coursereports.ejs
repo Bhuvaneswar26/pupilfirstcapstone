@@ -13,7 +13,7 @@
     
 </head>
 
-<body class="font-sans bg-gray-100 min-h-screen">
+<body class="font-sans bg-gray-200 min-h-screen">
 
     <!-- Navigation Bar -->
     <nav class="bg-blue-500 p-4 text-white flex items-center justify-between">
@@ -46,6 +46,10 @@
                     <div class="w-1/3">Email</div>
                     <div class="w-1/3 text-right">Status</div>
                 </div>
+
+                <% if (students.length === 0) { %>
+                    <div class="bg-blue-200 text-gray-800 p-4 rounded text-center">No students enrolled yet</div>
+                <% } %>
 
                 <% students.forEach((student) => { %>
                     <div class="flex items-center justify-between bg-blue-200 text-gray-800 p-4 rounded">

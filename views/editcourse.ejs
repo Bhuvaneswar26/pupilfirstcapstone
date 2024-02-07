@@ -8,7 +8,7 @@
   <script src="https://kit.fontawesome.com/ba6d17dfa2.js" crossorigin="anonymous"></script>
   <title>Educator</title>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-200">
   <!-- Navbar -->
   <nav class="bg-blue-500 p-4 text-white flex items-center justify-between">
     <div class="flex items-center">
@@ -45,14 +45,12 @@
           <h3 class="text-xl mb-4"><%= course.courseName %></h3>
           <p class="text-gray-600 mb-4"><%= course.description %></p>
           <a href="/educator/addchapter/<%= course.id %>" class="bg-blue-500 text-white px-4 py-2 rounded-md inline-block">Edit</a>
+          <a href="/educator/deletecourse/<%= course.id %>" class="bg-red-500 text-white px-4 py-2 rounded-md inline-block">Delete</a>
         </div>
       <% }) %>
     </div>
 
   </div>
-
-  <!-- Footer -->
-  <%- include('partials/footer') %>
 
 </body>
 </html>

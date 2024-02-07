@@ -295,6 +295,9 @@ const geteditchapter = async (request, response) => {
       .status(404)
       .render("error", { message: "chapter not found" });
   }
+
+  const course = await Course.findByPk(chapter.courseId);
+
   await Page.findAll({
     where: {
       chapterId: request.params.chapterid,
@@ -304,6 +307,7 @@ const geteditchapter = async (request, response) => {
       if (request.accepts("html")) {
         return response.render("editchapter", {
           csrfToken: request.csrfToken(),
+          course,
           chapter,
           pages,
           error: request.flash("error"),
@@ -433,6 +437,11 @@ const getaddcontent = async (request, response) => {
   if (!page) {
     return response.status(404).render("error", { message: "page not found" });
   }
+
+  const chapter = await Chapter.findByPk(page.chapterId);
+
+  const course = await Course.findByPk(chapter.courseId);
+
   await Pagecontent.findAll({
     where: {
       pageId: request.params.pageid,
@@ -443,6 +452,8 @@ const getaddcontent = async (request, response) => {
       if (request.accepts("html")) {
         return response.render("addcontent", {
           csrfToken: request.csrfToken(),
+          course,
+          chapter,
           page,
           pagecontents,
           error: request.flash("error"),
@@ -493,14 +504,14 @@ const postaddcontent = async (request, response) => {
       return response.redirect("/educator/addcontent/" + request.params.pageid);
     }
     try {
-      let start = Number(noofexisting) + 1;
-      let end = Number(noofinputs) + Number(noofexisting) + 1;
+      let start = 1;
+      let end = Number(noofinputs) + 1;
       for (let i = start; i < end; i++) {
         let j = i;
         let sectionType = "sectionType" + j;
         let sectionContent = "sectionContent" + j;
         await Pagecontent.create({
-          sectionNumber: i,
+          sectionNumber: request.body["sectionNumber" + j],
           type: request.body[sectionType],
           content: request.body[sectionContent],
           pageId: request.params.pageid,
@@ -661,6 +672,153 @@ const getcoursereports = async (request, response) => {
   });
 };
 
+const deletecourse = async (request, response) => {
+  const courseId = request.params.courseid;
+
+  try {
+    // Find all chapters belonging to the course
+    const chapters = await Chapter.findAll({
+      where: { courseId },
+    });
+
+    // Delete page contents associated with each page
+    for (const chapter of chapters) {
+      const pages = await Page.findAll({ where: { chapterId: chapter.id } });
+      const pageIds = pages.map((page) => page.id);
+
+      await Pagecontent.destroy({ where: { pageId: pageIds } });
+      await coursestatus.destroy({ where: { pageId: pageIds } });
+      await Page.destroy({ where: { id: pageIds } });
+    }
+
+    //delete enrollments
+    await enrollment.destroy({ where: { courseId: request.params.courseid } });
+
+    // Delete chapters
+    const chapterIds = chapters.map((chapter) => chapter.id);
+    await Chapter.destroy({ where: { id: chapterIds } });
+
+    // Delete the course
+    await Course.destroy({ where: { id: courseId } });
+
+    if (request.accepts("html")) {
+      request.flash("success", "Course deleted successfully");
+      response.redirect("/educator");
+    } else {
+      response.status(200).json({ message: "Course deleted successfully" });
+    }
+  } catch (error) {
+    if (request.accepts("html")) {
+      console.log(error);
+      request.flash("error", error.message);
+      response.redirect("/educator");
+    } else {
+      response.status(400).json({ message: error.message });
+    }
+  }
+};
+
+const deletechapter = async (request, response) => {
+  const chapterId = request.params.chapterid;
+
+  try {
+    // Find all pages belonging to the chapter
+
+    let courseid = await Chapter.findOne({ where: { id: chapterId } });
+
+    courseid = courseid.courseId;
+    const pages = await Page.findAll({ where: { chapterId } });
+    const pageIds = pages.map((page) => page.id);
+
+    // Delete page contents associated with each page
+    await Pagecontent.destroy({ where: { pageId: pageIds } });
+
+    await coursestatus.destroy({ where: { pageId: pageIds } });
+
+    // Delete the pages
+    await Page.destroy({ where: { id: pageIds } });
+
+    // Delete the chapter
+    await Chapter.destroy({ where: { id: chapterId } });
+
+    if (request.accepts("html")) {
+      request.flash("success", "Chapter deleted successfully");
+      response.redirect("/educator/addchapter/" + courseid);
+    } else {
+      response.status(200).json({ message: "Chapter deleted successfully" });
+    }
+  } catch (error) {
+    if (request.accepts("html")) {
+      let courseid = await Chapter.findOne({ where: { id: chapterId } });
+      courseid = courseid.courseId;
+      request.flash("error", error.message);
+      response.redirect("/educator/addchapter/" + courseid);
+    } else {
+      response.status(400).json({ message: error.message });
+    }
+  }
+};
+
+const deletepage = async (request, response) => {
+  const pageId = request.params.pageid;
+
+  try {
+    // Delete page contents associated with the page
+
+    let chapterid = await Page.findOne({ where: { id: pageId } });
+    chapterid = chapterid.chapterId;
+    await Pagecontent.destroy({ where: { pageId } });
+    await coursestatus.destroy({ where: { pageId } });
+    // Delete the page
+    await Page.destroy({ where: { id: pageId } });
+
+    if (request.accepts("html")) {
+      request.flash("success", "Page deleted successfully");
+      response.redirect("/educator/editchapter/" + chapterid);
+    } else {
+      response.status(200).json({ message: "Page deleted successfully" });
+    }
+  } catch (error) {
+    if (request.accepts("html")) {
+      let chapterid = await Page.findOne({ where: { id: pageId } });
+      chapterid = chapterid.chapterId;
+      request.flash("error", error.message);
+      response.redirect("/educator/editchapter/" + chapterid);
+    } else {
+      response.status(400).json({ message: error.message });
+    }
+  }
+};
+
+const deletecontent = async (request, response) => {
+  const contentId = request.params.contentid;
+  try {
+    // Delete the content
+    let pageid = await Pagecontent.findOne({ where: { id: contentId } });
+    pageid = pageid.pageId;
+    await Pagecontent.destroy({ where: { id: contentId } });
+    if (request.accepts("html")) {
+      request.flash("success", "Content deleted successfully");
+      response.redirect("/educator/addcontent/" + pageid);
+    } else {
+      response.status(200).json({ message: "Content deleted successfully" });
+    }
+  } catch (error) {
+    await Pagecontent.destroy({ where: { id: contentId } });
+
+    let pageid = await Pagecontent.findOne({ where: { id: contentId } });
+
+    pageid = pageid.pageId;
+
+    if (request.accepts("html")) {
+      request.flash("error", error.message);
+      response.redirect("/educator/addcontent/" + pageid);
+    } else {
+      response.status(400).json({ message: error.message });
+    }
+  }
+};
+
 module.exports = {
   geteducator,
   getcreatecourse,
@@ -676,4 +834,8 @@ module.exports = {
   geteditcourse,
   getreports,
   getcoursereports,
+  deletecourse,
+  deletechapter,
+  deletepage,
+  deletecontent,
 };

@@ -7,58 +7,49 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://kit.fontawesome.com/ba6d17dfa2.js" crossorigin="anonymous"></script>
   <title>Educator</title>
+  <style>
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .grid > * {
+      flex: 1 1 50%;
+    }
+  </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-200">
   <!-- Navbar -->
   <nav class="bg-blue-500 p-4 text-white flex items-center justify-between">
     <div class="flex items-center">
       <a href="/login"><span class="text-4xl font-semibold">LMS</span></a>
     </div>
     <div class="flex items-center space-x-8">
-      <!-- Dashboard Link  for navbar-->
+      <!-- Dashboard Link for navbar -->
       <a href="/login" class="hover:underline text-lg">Dashboard<i class="fa-solid fa-table-columns" style="margin-left: 4px;"></i></a>
-
       <a href="/profile" class="hover:underline text-lg">Profile<i class="fa-regular fa-user" style="margin-left: 4px;"></i></a>
-
       <a href="/signout" class="hover:underline text-lg">SignOut<i class="fa-solid fa-arrow-right-from-bracket" style="margin-left: 4px;"></i></a>
     </div>
   </nav>
 
+  <div class="nav-breadcrumb" style="margin: 2rem;">
+    <a href="/educator/editcourse" class="text-red-500 hover:underline" style="color: red; font-size: 1.5rem; font-weight: 600;"><i class="fas fa-edit mr-1"></i>Edit Courses</a>
+    <i class="fas fa-chevron-right"></i>
+    <a href="/educator/addchapter/<%= course.id %>" class="text-blue-500 hover:underline"  style="color: blue; font-size: 1.5rem; font-weight: 600;">Edit Course: <%= course.courseName %></a>
+    <i class="fas fa-chevron-right"></i>
+    <a href="/educator/editchapter/<%= chapter.id %>" class="text-blue-500 hover:underline"  style="color: green; font-size: 1.5rem; font-weight: 600;"><i class="fas fa-edit mr-1"></i>Edit Chapter: <%= chapter.chapterName %></a>
+    <i class="fas fa-chevron-right"></i>
+    <a href="/educator/addcontent/<%= page.id %>" class="text-blue-500 hover:underline"  style="color: blueviolet; font-size: 1.5rem; font-weight: 600;">Edit Page: <%= page.pageName %></a>
+  </div>
 
-  <div class="container m-4">
-    <h2 class="text-2xl mb-4 mt-8 ml-4">Edit Existing Page Sections</h2>
-    <% pagecontents.forEach((section) => { %>
-      <form action="/educator/editcontent/<%= page.id  %>/<%= section.id %>" class="mb-8" method="POST" enctype="application/x-www-form-urlencoded">
-        <div class="mb-8 bg-white p-6 rounded-lg shadow-md">
-          <h3 class="text-xl mb-4">Section: <%= section.sectionNumber %></h3>
-          <input name="_csrf" value="<%= csrfToken %>" type="hidden"/>
-          <input type="hidden" name="_method" value="PUT" />
-          <label for="sectiontype" class="block mb-2">Section Type:</label>
-          <select id="sectiontype" name="sectiontype" class="w-full border border-gray-300 rounded-md p-2" required>
-            <option value="text" <%= section.type === "text" ? 'selected' : '' %>>Text</option>
-            <option value="heading" <%= section.type === "heading" ? 'selected' : '' %>>Heading</option>
-            <option value="code" <%= section.type === "code" ? 'selected' : '' %>>Code</option>
-            <option value="note" <%= section.type === "note" ? 'selected' : '' %>>Note</option>
-            <option value="important" <%= section.type === "important" ? 'selected' : '' %>>Important Text</option>
-            <option value="video" <%= section.type === "video" ? 'selected' : '' %>>Video</option>
-          </select>
-          <div class="mb-4">
-            <label for="sectioncontent" class="block mb-2">Section Content:</label>
-            <textarea id="sectioncontent" name="sectioncontent" class="w-full border border-gray-300 rounded-md p-2 mb-4 h-24" required ><%= section.content %></textarea>
-          </div>
-          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md" >Save changes</button>
-        </div>
-      </form>
-    <% }) %>
-
-    <!-- Page form -->
+  <div class="container m-4 grid grid-cols-2 gap-8">
+    <!-- Add Page Section -->
     <section class="bg-white p-6 rounded-lg shadow-md mb-8">
-      <h1 class="text-4xl font-semibold mb-6">Add Page content</h1>
+      <h1 class="text-4xl font-semibold mb-6">Add Page Content</h1>
       <!-- Number of sections -->
       <div class="mb-4">
         <label for="numSections" class="block mb-2">Number of Sections to be added:</label>
         <input type="text" value="<%= page.id %>" class="chapterid" hidden>
-        <input type="number" id="numSections" name="numSections" class="w-full border border-gray-300 rounded-md p-2" required>
+        <input type="number" id="numSections" name="numSections" class="w-full border border-gray-500 rounded-md p-2" placeholder="please vverify section number before submiting" required>
       </div>
       <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md" onclick="nofosubmit()">Submit</button>
 
@@ -68,10 +59,40 @@
         <input name="_csrf" value="<%= csrfToken %>" type="hidden"/>
       </form>
     </section>
+
+    <!-- Edit Existing Page Sections -->
+    <section class="grid gap-8">
+      <h1 class="text-3xl"style="font-weight:600">Edit Existing Content</h1>
+      <% if(pagecontents.length === 0) { %>
+        <h2 class="text-2xl">No Section content created! please create the content</h2>
+      <% } %>
+      <% pagecontents.forEach((section) => { %>
+        <form action="/educator/editcontent/<%= page.id  %>/<%= section.id %>" class="mb-8" method="POST" enctype="application/x-www-form-urlencoded">
+          <div class="mb-8 bg-white p-6 rounded-lg shadow-md" style="height: 100%;">
+            <h3 class="text-xl mb-4">Section: <%= section.sectionNumber %></h3>
+            <input name="_csrf" value="<%= csrfToken %>" type="hidden"/>
+            <input type="hidden" name="_method" value="PUT" />
+            <label for="sectiontype" class="block mb-2">Section Type:</label>
+            <select id="sectiontype" name="sectiontype" class="w-full border border-gray-300 rounded-md p-2" required>
+              <option value="text" <%= section.type === "text" ? 'selected' : '' %>>Text</option>
+              <option value="heading" <%= section.type === "heading" ? 'selected' : '' %>>Heading</option>
+              <option value="code" <%= section.type === "code" ? 'selected' : '' %>>Code</option>
+              <option value="note" <%= section.type === "note" ? 'selected' : '' %>>Note</option>
+              <option value="important" <%= section.type === "important" ? 'selected' : '' %>>Important Text</option>
+              <option value="video" <%= section.type === "video" ? 'selected' : '' %>>Video</option>
+            </select>
+            <div class="mb-4">
+              <label for="sectioncontent" class="block mb-2">Section Content:</label>
+              <textarea id="sectioncontent" name="sectioncontent" class="w-full border border-gray-300 rounded-md p-2 mb-4 h-24" required ><%= section.content %></textarea>
+            </div>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md" >Save changes</button>
+            <a type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md ml-4" href="/educator/deletecontent/<%= section.id %>">Delete Section</a>
+          </div>
+        </form>
+      <% }) %>
+    </section>
   </div>
 
-  <!-- Footer -->
-  <%- include('partials/footer') %>
 
   <script>
     if(document.getElementById("numSections") != null){
@@ -86,9 +107,8 @@
       var nofo = document.getElementById("numSections").value;
       var form = document.getElementsByClassName("pagessection")[0];
       var chapterid = document.getElementsByClassName("chapterid")[0].value;
-      const existnumSections = document.getElementsByName("existnumSections")[0].value;
-      let start = Number(existnumSections);
-      let end = Number(nofo) + Number(existnumSections);
+      let start = 0
+      let end = Number(nofo);
       if(nofo <= 0) {
         alert("Please enter a valid number");
         return;
@@ -96,19 +116,20 @@
       for (var i = start; i < end; i++) {
         form.innerHTML += `
           <div class='mb-8 bg-white p-6 rounded-lg shadow-md'>
-            <h3 class='text-xl mb-4'>Section:${i + 1}</h3>
+            <label for='sectionNumber${i + 1}' class='block mb-2'>Section Number:</label>
+            <input type='number' id='sectionNumber${i + 1}' name='sectionNumber${i + 1}' class='w-full border border-gray-300 rounded-md p-2' required>
             <label for='sectionType${i + 1}' class='block mb-2'>Section Type:</label>
             <select id='sectionType${i + 1}' name='sectionType${i + 1}' class='w-full border border-gray-300 rounded-md p-2' required>
               <option value='text'>Text</option>
               <option value='heading'>Heading</option>
               <option value='code'>Code</option>
               <option value='video'>Video</option>
-              <option value='heading'>Heading</option>
+              <option value='note'>Note</option>
               <option value='important'>Important</option>
             </select>
             <div class='mb-4'>
               <label for='sectionContent${i + 1}' class='block mb-2'>Section Content:</label>
-              <textarea id='sectionContent${i + 1}' name='sectionContent${i + 1}' class='w-full border border-gray-300 rounded-md p-2 mb-4 h-24' required placeholder='if the content type id video please input the unique id of the iframe link here no the whole iframe.go to youtube and click on share button you will get embed option then you will get a ifram tag in  that link copy thr unique id herenpms'></textarea>
+              <textarea id='sectionContent${i + 1}' name='sectionContent${i + 1}' class='w-full border border-gray-300 rounded-md p-2 mb-4 h-24' required placeholder='If the content type id video please input the unique id of the iframe link here no the whole iframe.go to youtube and click on share button you will get embed option then you will get a ifram tag in  that link copy thr unique id herenpms'></textarea>
             </div>
           </div>`;
       }

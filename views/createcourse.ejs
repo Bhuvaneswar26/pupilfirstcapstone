@@ -8,7 +8,7 @@
   <script src="https://kit.fontawesome.com/ba6d17dfa2.js" crossorigin="anonymous"></script>
   <title>Educator</title>
 </head>
-<body class="bg-gray-100">
+<body class="bg-blue-200">
   <!-- Navbar -->
   <nav class="bg-blue-500 p-4 text-white flex items-center justify-between">
     <div class="flex items-center">
@@ -37,12 +37,12 @@
             <input name="_csrf" value="<%= csrfToken %>" type="hidden"/>
           <!-- Course Name -->
           <div class="flex items-center">
-            <label for="coursename" class="w-1/4">Course Name:</label>
+            <label for="coursename" class="w-1/4" style="color: black; font-size: medium; font-weight: 400;">Course Name<span style="color: red; font-size: large;">*</span>:</label>
             <input type="text" id="coursename" name="coursename" class="flex-grow border border-gray-300 rounded-md p-2">
           </div>
 
           <div class="flex items-center">
-            <label for="coursedescription" class="w-1/4">Course description:</label>
+            <label for="coursedescription" class="w-1/4" style="color: black; font-size: medium; font-weight: 400;">Course Description<span style="color: red; font-size: large;">*</span>:</label>
             <input type="text-area" id="coursedescription" name="coursedescription" class="flex-grow border border-gray-300 rounded-md p-2">
           </div>
 

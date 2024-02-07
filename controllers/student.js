@@ -157,7 +157,25 @@ const previewcourse = async (request, response) => {
       },
       order: [["chapterNumber", "ASC"]],
     });
-    response.render("previewcourse", { course, coursechapters });
+
+    //enrollments count
+    const enrollments = await enrollment.findAll({
+      where: {
+        courseId: request.params.courseid,
+      },
+    });
+
+    let enrolledcount = enrollments.length;
+
+    //finding faculty
+
+    const user = await models.User.findOne({
+      where: { id: course.facultyId },
+    });
+
+    course.facultyName = user.firstName;
+
+    response.render("previewcourse", { course, coursechapters, enrolledcount });
   } catch (error) {
     response.render("error", { message: "Error in previewcourse" });
   }

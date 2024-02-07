@@ -14,7 +14,8 @@
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
       border-radius: 10px;
       overflow: hidden;
-      background-color: #ebf8ff; 
+      background-color: #ffffff; 
+      border: 2px solid black;
     }
 
     nav {
@@ -83,7 +84,7 @@
     }
 
     .change-password-form button:hover {
-      background-color: #2c5282; 
+      background-color: #e6e6e6; 
     }
 
     footer {
@@ -111,7 +112,7 @@
   <div class="container mx-auto mt-8 profile-content">
     <h2 class="text-2xl font-semibold mb-4">User Profile</h2>
     <div class="mb-4">
-      <p class="text-lg"><strong>First Name:</strong> <span id="username"><%= user.firstName %></span></p>
+      <p class="text-lg"><strong >First Name:</strong> <span id="username"><%= user.firstName %></span></p>
       <p class="text-lg"><strong>Last Name:</strong> <span id="lastName"><%= user.lastName %></span></p>
       <p class="text-lg"><strong>Email:</strong> <span id="email"><%= user.email %></span></p>
     </div>
@@ -120,9 +121,9 @@
     <form id="passwordForm" class="max-w-sm change-password-form" action="/profile/changepassword" method="POST" enctype="application/x-www-form-urlencoded">
       <input name="_csrf" value="<%= csrfToken %>" type="hidden"/>
       <input type="hidden" name="_method" value="PUT" />
-      <label for="oldpassword">Old Password:</label>
+      <label for="oldpassword" style="font-weight: 600;">Old Passwords<span style="color: red; font-size: large;">*</span>:</label>
       <input type="password" id="oldpassword" name="oldpassword" required>
-      <label for="newpassword">New Password:</label>
+      <label for="newpassword" style="font-weight: 600;">New Password<span style="color: red; font-size: large;">*</span>:</label>
       <input type="password" id="newpassword" name="newpassword" required>
       <button type="submit">Change Password</button>
       <%- include('partials/flashsuccess') %>
