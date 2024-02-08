@@ -182,4 +182,4 @@ Executing this command will initiate the testing process and provide feedback on
 
 The project has been deployed to the cloud and is accessible at the following URL:
 
-[https://lms-bhuvaneswar.onrender.com](https://lms-bhuvaneswar.onrender.com)
+[https://bhuvaneswar-lms.onrender.com](https://bhuvaneswar-lms.onrender.com)
